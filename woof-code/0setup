@@ -521,20 +521,17 @@ if [ "$RUNNINGPUP" = "yes" -a "$DBmethod" = "true" ];then
  LANG=${LANGORG} echo "it will be reading the updated database files."
  LANG=${LANGORG} echo -n "Press ENTER key to exit: "
  read enditnow
- DATE="`date +%Y%m%d `"
- echo "$DATE" > /var/packages/db-date
+ echo "`date +%Y%m%d `" > /var/packages/db-date
  unset OSETUP_CALLED_FROM
  exit
 elif [ "$RUNNINGPUP" = "yes" ];then
  kill $XPID
  Xdialog --title "$(gettext 'PPM database')" --left --msgbox "$(gettext 'PPM database was successfully completed.')" 0 100
- DATE="`date +%Y%m%d `"
- echo "$DATE" > /var/packages/db-date
+ echo "`date +%Y%m%d `" > /var/packages/db-date
  unset OSETUP_CALLED_FROM
  exit
 fi
 
-echo "`date +%Y%m%d `" > /var/packages/db-date
 check_compat_distro_pkgs
 
 ### END ###
