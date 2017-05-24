@@ -36,6 +36,7 @@ busybox chown -h -R spot:spot /home/uzer/spot
 ln -sf ../../usr /home/uzer/.usr
 ln -sf ../../etc /home/uzer/.etc
 ln -sf ../../usr/share/X11/rgb.txt /home/uzer/.rgb.txt
+ln -sf ../../var/packages /home/uzer/.packages
 
 # fix /etc/passwd
 sed -i "s%/root/uzer%/home/uzer%" /etc/passwd
