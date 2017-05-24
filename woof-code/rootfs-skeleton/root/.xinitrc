@@ -53,7 +53,7 @@ if [ "$CURRENTWM" = "startkde" ];then
 fi
 
 #100501 if full nvidia pkg installed, it has a gui config app...
-[ -f /root/.nvidia-settings-rc ] && nvidia-settings --load-config-only
+[ -f ${HOME}/.nvidia-settings-rc ] && nvidia-settings --load-config-only
 
 [ -f $HOME/.xgamma-gamma ] && /bin/sh $HOME/.xgamma-gamma #100215 see /usr/sbin/xgamma-gui.
 
@@ -90,9 +90,9 @@ if [ -f /etc/xrandrindex ];then
   fi
 fi
 
-if [ -f /root/.xset.sh ];then
+if [ -f ${HOME}/.xset.sh ];then
  #this is created by /usr/bin/pupx...
- eval "/root/.xset.sh"
+ eval "${HOME}/.xset.sh"
 else
  ##Xorg has it's own fontpath settings in /etc/X11/xorg.conf...
  #if [ "`readlink /usr/bin/X`" != "Xorg" ];then
@@ -105,14 +105,14 @@ else
 fi
 
 #v1.0.7 also see /etc/rc.d/rc.local0
-if [ -f /root/.fonts/fonts.dir ];then
- xset fp+ /root/.fonts/
+if [ -f ${HOME}/.fonts/fonts.dir ];then
+ xset fp+ ${HOME}/.fonts/
 fi
 
 [ -f /usr/bin/xsetroot ] && xsetroot -cursor_name top_left_arrow
 
 #relocates right-side icons to actual right-side of screen...
-/usr/sbin/fixPuppyPin /root/Choices/ROX-Filer/PuppyPin #v1.0.7
+/usr/sbin/fixPuppyPin ${HOME}/Choices/ROX-Filer/PuppyPin #v1.0.7
 
 #w468 on old PCs rox sometimes does not start, see further down...
 #120718 raspi sometimes need extra delay otherwise rox fails to start.
@@ -125,10 +125,10 @@ CPUSPEED=`grep -m 1 -i '^cpu MHz' /proc/cpuinfo | tr -d ' ' | cut -f 2 -d ':' | 
 case $desktop in
  pcmanfm) pcmanfm --desktop & ;;
  rox)
-	if [ -f /root/Choices/ROX-Filer/PuppyPan1 ];then
-		roxfiler -p /root/Choices/ROX-Filer/PuppyPin -r /root/Choices/ROX-Filer/PuppyPan1
+	if [ -f ${HOME}/Choices/ROX-Filer/PuppyPan1 ];then
+		roxfiler -p ${HOME}/Choices/ROX-Filer/PuppyPin -r /root/Choices/ROX-Filer/PuppyPan1
 	else
-		roxfiler -p /root/Choices/ROX-Filer/PuppyPin
+		roxfiler -p ${HOME}/Choices/ROX-Filer/PuppyPin
 	fi
 	;;
 esac

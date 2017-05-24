@@ -7,7 +7,7 @@
 Rxvt.keysym.0xFF50: \033[1~
 Rxvt.keysym.0xFF57: \033[4~
 
-!Rxvt*menu: /root/.rxvt.menu
+!Rxvt*menu: ${HOME}/.rxvt.menu
 Rxvt*saveLines: 1000
 
 urxvt.foreground:#f8f8f8f8f8f8

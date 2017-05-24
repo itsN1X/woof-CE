@@ -6,7 +6,7 @@ This is handy if you want something to run automatically.
 You can easily create a "symlink" (symbolic link) to an executable.
 For example, say that you wanted to run /usr/local/bin/rubix (a game)
 everytime Puppy is started. Use ROX-Filer (the file manager) and open
-two windows, one on /usr/local/bin, the other on /root/Startup.
+two windows, one on /usr/local/bin, the other on ${HOME}/Startup.
 Then just drag 'rubix' across and a menu will popup and ask if you want
 to copy, move or link, and you choose to link.
 
