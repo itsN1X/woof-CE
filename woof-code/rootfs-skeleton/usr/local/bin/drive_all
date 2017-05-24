@@ -29,7 +29,7 @@
 #110505 support sudo for non-root user.
 #110720 should not open a layer inside aufs, ex: session saved entire partition, desktop drive icon is /initrd/pup_rw.
 #110721 detect if have clicked on a close-box of mounted partition.
-#120110 running as fido, popup password box changes mouse pointer position, need read before run sudo.
+#120110 running as uzer, popup password box changes mouse pointer position, need read before run sudo.
 #120129 karl godt: fix ZOMBIES, see http://murga-linux.com/puppy/viewtopic.php?t=71767&start=420. see also rc.shutdown, pmount, pup_event_frontend_d.
 #120323 partial replace 'xmessage' with 'pupmessage'.
 #120516 pup_event_frontend_d may call here when a drive plugged in, fix handling of automounting.

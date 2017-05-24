@@ -1,5 +1,5 @@
 "spot" is a restricted user of Puppy.
-(you could also add fido, rover, rex!)
+(you could also add uzer, rover, rex!)
 
 /root/spot is spot's home directory.
 

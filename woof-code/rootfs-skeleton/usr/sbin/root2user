@@ -1,7 +1,7 @@
 #!/bin/sh
 #Barry Kauler, April 2011, GPL3 (/usr/share/doc/legal)
 #intended to be called by rc.shutdown on 1st boot, create a non-root saved session.
-#note, /usr/sbin/loginmanager is able to revert fido back to root.
+#note, /usr/sbin/loginmanager is able to revert uzer back to root.
 #110918 run with or without X.
 #111003 change from Xdialog to pupdialog.
 #120317 L18L: set group/permissions for /dev/console
@@ -9,8 +9,8 @@
 
 . /etc/rc.d/PUPSTATE
 
-if grep -q fido /etc/inittab && [ -d /home/fido ]; then
-	msg="The system is already configured to run under a normal user (fido)"
+if grep -q uzer /etc/inittab && [ -d /home/uzer ]; then
+	msg="The system is already configured to run under a normal user (uzer)"
 	if [ $DISPLAY ];then
 		/usr/lib/gtkdialog/box_ok "Message" info "$msg"
 	else
@@ -19,34 +19,34 @@ if grep -q fido /etc/inittab && [ -d /home/fido ]; then
 	exit
 fi
 
-if [ ! -d /home/fido ] ; then
+if [ ! -d /home/uzer ] ; then
 	CHANGE_ROOT_PASS=yes
-	cp -P -a /root /home/fido
+	cp -P -a /root /home/uzer
 	# change /root to /home/$USER
 	root_stuff=$(grep -r "/root" /home/$USER | sed 's|:.*||' | sort -u)
 	[ "$root_stuff" != "" ] && sed -i "s%/root%/home/$USER%g" $root_stuff
 fi
 
 # -h means affect symlinks instead of target, -R means recursive...
-busybox chown -h -R fido:users /home/fido
-busybox chmod g+s /home/fido
-busybox chown -h -R spot:spot /home/fido/spot
+busybox chown -h -R uzer:users /home/uzer
+busybox chmod g+s /home/uzer
+busybox chown -h -R spot:spot /home/uzer/spot
 
 # fix broken symlinks..
-ln -sf ../../usr /home/fido/.usr
-ln -sf ../../etc /home/fido/.etc
-ln -sf ../../usr/share/X11/rgb.txt /home/fido/.rgb.txt
+ln -sf ../../usr /home/uzer/.usr
+ln -sf ../../etc /home/uzer/.etc
+ln -sf ../../usr/share/X11/rgb.txt /home/uzer/.rgb.txt
 
 # fix /etc/passwd
-sed -i "s%/root/fido%/home/fido%" /etc/passwd
-sed -i "s%/root/%/home/fido/%" /etc/passwd
+sed -i "s%/root/uzer%/home/uzer%" /etc/passwd
+sed -i "s%/root/%/home/uzer/%" /etc/passwd
 
-#modify /etc/inittab to autologin as fido...
-userEXPR='s%autologin root %autologin fido %'
+#modify /etc/inittab to autologin as uzer...
+userEXPR='s%autologin root %autologin uzer %'
 sed -i -e "$userEXPR" /etc/inittab
 #120409 if using minit instead of busybox init...
 if [ -f /etc/minit/getty/1/params  ];then #see my minit pet pkg.
- EXPR2='s%^root$%fido%'
+ EXPR2='s%^root$%uzer%'
  sed -i -e "$EXPR2" /etc/minit/getty/1/params
 fi
 
@@ -90,16 +90,16 @@ ROOTPASSWORD=""
 while [ "$ROOTPASSWORD" = "" ]
 do
 	if [ "$DISPLAY" ] ; then
-		ROOTPASSWORD="$(/usr/lib/gtkdialog/box_passwd --show "Change admin passwd" "First shutdown: ask admin password." "Please enter a password for the administrator (root), minimum six characters. Login as fido does not require a password, so at bootup you will go directly to the desktop. This is also the case if you had chosen to run as administrator. However, having chosen the restricted fido user, you will be required to enter a password whenever you want to perform an operation that requires admin priviledges. PLEASE REMEMBER THIS PASSWORD")"
+		ROOTPASSWORD="$(/usr/lib/gtkdialog/box_passwd --show "Change admin passwd" "First shutdown: ask admin password." "Please enter a password for the administrator (root), minimum six characters. Login as uzer does not require a password, so at bootup you will go directly to the desktop. This is also the case if you had chosen to run as administrator. However, having chosen the restricted uzer user, you will be required to enter a password whenever you want to perform an operation that requires admin priviledges. PLEASE REMEMBER THIS PASSWORD")"
 	else
-		ROOTPASSWORD="`dialog --title "First shutdown: ask admin password" --stdout --nocancel --inputbox "Please enter a password for the administrator (root), minimum six characters.\n\nLogin as fido does not require a password, so at bootup you will go directly to the desktop. This is also the case if you had chosen to run as administrator. However, having chosen the restricted fido user, you will be required to enter a password whenever you want to perform an operation that requires admin priviledges.\n\nPLEASE REMEMBER THIS PASSWORD" 0 0 ""`"
+		ROOTPASSWORD="`dialog --title "First shutdown: ask admin password" --stdout --nocancel --inputbox "Please enter a password for the administrator (root), minimum six characters.\n\nLogin as uzer does not require a password, so at bootup you will go directly to the desktop. This is also the case if you had chosen to run as administrator. However, having chosen the restricted uzer user, you will be required to enter a password whenever you want to perform an operation that requires admin priviledges.\n\nPLEASE REMEMBER THIS PASSWORD" 0 0 ""`"
 	fi
 done
 
 echo "root:${ROOTPASSWORD}" | busybox chpasswd #--md5
 #sudo asks for user password, not root, simple solution give same password to both...
 #(that is the default, but i have specified runaspw in /etc/sudoers to ask for root pw)
-echo "fido:${ROOTPASSWORD}" | busybox chpasswd #--md5
+echo "uzer:${ROOTPASSWORD}" | busybox chpasswd #--md5
 
 #note, /usr/sbin/loginmanager enables to change back to root afterward.
 

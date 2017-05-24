@@ -26,13 +26,13 @@ rootEXPR="s%^tty1.*%tty1::respawn:/sbin/mingetty --autologin root tty1%"
 sed -i -e "$rootEXPR" /etc/inittab #110507 TaZOC bug fix.
 #120409 if using minit instead of busybox init...
 if [ -f /etc/minit/getty/1/params  ];then #see my minit pet pkg.
- EXPR2='s%^fido$%root%'
+ EXPR2='s%^uzer$%root%'
  sed -i -e "$EXPR2" /etc/minit/getty/1/params
 fi
 
 # fix /etc/passwd
-sed -i "s%/home/fido/%/root/%" /etc/passwd
-sed -i "s%/home/fido%/root/fido%" /etc/passwd
+sed -i "s%/home/uzer/%/root/%" /etc/passwd
+sed -i "s%/home/uzer%/root/uzer%" /etc/passwd
 
 /usr/lib/gtkdialog/box_ok "$(gettext 'Login manager')" complete "$(gettext 'Ok, you will be administrator at next boot')"
 

@@ -18,9 +18,9 @@
 
 [ "`whoami`" != "root" ] && exec sudo -A ${0} ${@}
 
-if grep -q fido /etc/inittab ; then
-	USER_OTPS="uid=1001,gid=500," #fido
-	USER_OTPS_2="-o uid=1001,gid=500" #fido
+if grep -q uzer /etc/inittab ; then
+	USER_OTPS="uid=1001,gid=500," #uzer
+	USER_OTPS_2="-o uid=1001,gid=500" #uzer
 fi
 
 #i realised this script has to allow reentrancy. So, all temp file now unique,
