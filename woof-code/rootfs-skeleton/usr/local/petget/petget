@@ -182,13 +182,13 @@ fi
 #optionally on the end: compileddistro|compiledrelease|repo| (fields 11,12,13)
 pPATTERN='^'"$PKGNAME"'|'
 if [ "$EXT" = ".pet" ];then
- DB_ENTRY="`cat /root/.packages/Packages-puppy-* | grep "$pPATTERN" | sort -r | head -n 1`"
+ DB_ENTRY="`cat /var/packages/Packages-puppy-* | grep "$pPATTERN" | sort -r | head -n 1`"
 else
- DB_ENTRY="`cat /root/.packages/Packages-${DISTRO_BINARY_COMPAT}-* | grep "$pPATTERN" | head -n 1`"
+ DB_ENTRY="`cat /var/packages/Packages-${DISTRO_BINARY_COMPAT}-* | grep "$pPATTERN" | head -n 1`"
 fi
 
 #w482 doesn't matter if incomplete, installpkg.sh will read .desktop file for description and category...
-#also, if .pet pkg has pet.specs, that will get written to /root/.packages/user-packages-installed
+#also, if .pet pkg has pet.specs, that will get written to /var/packages/user-packages-installed
 if [ "$DB_ENTRY" = "" ];then
  DB_ENTRY="${PKGNAME}|${DB_nameonly}|${DB_version}|${DB_pkgrelease}||||${FULLPKGNAME}|||"
 fi
@@ -212,7 +212,7 @@ rm -f $PKGPATH/${PKGNAME}.tar.gz 2>/dev/null
 
 #announce result...
 if [ $RETVAL -ne 0 -o ! -s /tmp/petget-installed-pkgs-log ];then
- ISTHERE="$(grep ${FULLPKGNAME} /root/.packages/user-installed-packages)"
+ ISTHERE="$(grep ${FULLPKGNAME} /var/packages/user-installed-packages)"
  if [ "$DISPLAY" ]; then
   [ "$ISTHERE" = "" ] && . /usr/lib/gtkdialog/box_ok "$(gettext 'Puppy Package Manager')" error "<b>${FULLPKGNAME} $(gettext 'failed to install')</b>"
   exit
@@ -271,7 +271,7 @@ else
 fi
 
 #120819 having a category does not mean there will also be a menu entry...
-if [ "`grep '/usr/.*share/applications/.*\.desktop$' /root/.packages/${PKGNAME}.files`" = "" ];then
+if [ "`grep '/usr/.*share/applications/.*\.desktop$' /var/packages/${PKGNAME}.files`" = "" ];then
  MENUMSG="$(gettext '...note, this package does not have a menu entry.')"
 fi
 
@@ -292,8 +292,8 @@ else
 fi
 
 #w0910 update image cache...
-if [ -f /root/.packages/${PKGNAME}.files ];then
- if [ "`grep 'usr/share/icons/hicolor' /root/.packages/${PKGNAME}.files`" != "" ];then
+if [ -f /var/packages/${PKGNAME}.files ];then
+ if [ "`grep 'usr/share/icons/hicolor' /var/packages/${PKGNAME}.files`" != "" ];then
   gtk-update-icon-cache -f /usr/share/icons/hicolor/
  fi
 fi

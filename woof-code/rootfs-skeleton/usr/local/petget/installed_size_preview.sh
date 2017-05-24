@@ -1,7 +1,7 @@
 #!/bin/sh
 # addapted from installpreview.sh
 
-[ -f /root/.packages/skip_space_check ] && exit 0
+[ -f /var/packages/skip_space_check ] && exit 0
 
 REPO=$(echo $1 | cut -f 4 -d '|') 
 [ ! "$REPO" ] && REPO=$(echo $1 | cut -f 2 -d '|')
@@ -13,7 +13,7 @@ export TEXTDOMAIN=petget___installed_size_preview.sh
 export OUTPUT_CHARSET=UTF-8
 
 . /etc/DISTRO_SPECS #has DISTRO_BINARY_COMPAT, DISTRO_COMPAT_VERSION
-. /root/.packages/DISTRO_PKGS_SPECS
+. /var/packages/DISTRO_PKGS_SPECS
 
 DB_FILE=Packages-`cat /tmp/petget/current-repo-triad`
 tPATTERN='^'"$TREE1"'|'
@@ -27,7 +27,7 @@ rm -f /tmp/petget_missing_dbentries-* 2>/dev/null
 rm -f /tmp/petget_missingpkgs_patterns 2>/dev/null
 rm -f /tmp/petget_installedsizek 2>/dev/null 
 
-DB_ENTRY="`grep "$tPATTERN" /root/.packages/$DB_FILE | head -n 1`"
+DB_ENTRY="`grep "$tPATTERN" /var/packages/$DB_FILE | head -n 1`"
 DB_dependencies="`echo -n "$DB_ENTRY" | cut -f 9 -d '|'`"
 DB_size="`echo -n "$DB_ENTRY" | cut -f 6 -d '|'`"
 

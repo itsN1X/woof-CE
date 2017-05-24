@@ -93,8 +93,8 @@ skipinstalled() {
   NEWLIST=""
   for F in $FOUND; do
     ONEBASE=$(basename $F | rev | cut -f2- -d'.' | rev)
-    grep -qw "$ONEBASE" /root/.packages/woof-installed-packages && continue
-    grep -qw "$ONEBASE" $HOME/.packages/user-installed-packages && continue
+    grep -qw "$ONEBASE" /var/packages/woof-installed-packages && continue
+    grep -qw "$ONEBASE" /var/packages/user-installed-packages && continue
     NEWLIST="$NEWLIST
 $F"
   done

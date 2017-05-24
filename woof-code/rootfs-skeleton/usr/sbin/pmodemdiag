@@ -70,7 +70,7 @@ cat /proc/devices > /tmp/pmodemdiag-$NAMEDATE/proc_devices.txt 2> /dev/null
 cp -f /tmp/usb_modeswitch_scsi-info.log /tmp/pmodemdiag-$NAMEDATE/ 2> /dev/null
 cp -f /etc/rc.d/rc.local /tmp/pmodemdiag-$NAMEDATE/ 2> /dev/null
 ifconfig > /tmp/pmodemdiag-$NAMEDATE/ifconfig.txt 2> /dev/null
-cp -f /root/.packages/user-installed-packages /tmp/pmodemdiag-$NAMEDATE/ 2> /dev/null
+cp -f /var/packages/user-installed-packages /tmp/pmodemdiag-$NAMEDATE/ 2> /dev/null
 cp -f /etc/rc.d/pupstate /tmp/pmodemdiag-$NAMEDATE/ 2> /dev/null
 touch /tmp/pmodemdiag-$NAMEDATE/kernel-`uname -r`
 cp -f /tmp/xerrs.log /tmp/pmodemdiag-$NAMEDATE/ 2> /dev/null

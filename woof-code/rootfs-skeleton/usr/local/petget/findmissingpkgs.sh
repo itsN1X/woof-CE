@@ -16,8 +16,8 @@
 DB_dependencies="$1" #in standard format of the package database, field 9.
 
 . /etc/DISTRO_SPECS #has DISTRO_BINARY_COMPAT, DISTRO_COMPAT_VERSION
-. /root/.packages/DISTRO_PKGS_SPECS #has PKGS_SPECS_TABLE
-. /root/.packages/PKGS_MANAGEMENT #has PKG_ALIASES_INSTALLED
+. /var/packages/DISTRO_PKGS_SPECS #has PKGS_SPECS_TABLE
+. /var/packages/PKGS_MANAGEMENT #has PKG_ALIASES_INSTALLED
 
 #110722 versioning info added to dependencies...
 #the dependencies field can now have &ge, &gt, &eq, &le, &lt
@@ -49,22 +49,22 @@ done
 #need patterns of all installed pkgs...
 #100711 /tmp/petget_installed_patterns_system is created in pkg_chooser.sh.
 cp -f /tmp/petget_installed_patterns_system /tmp/petget_installed_patterns_all
-if [ -s /root/.packages/user-installed-packages ];then
- INSTALLED_PATTERNS_USER="`cat /root/.packages/user-installed-packages | cut -f 2 -d '|' | sed -e 's%^%|%' -e 's%$%|%' -e 's%\\-%\\\\-%g'`"
+if [ -s /var/packages/user-installed-packages ];then
+ INSTALLED_PATTERNS_USER="`cat /var/packages/user-installed-packages | cut -f 2 -d '|' | sed -e 's%^%|%' -e 's%$%|%' -e 's%\\-%\\\\-%g'`"
  echo "$INSTALLED_PATTERNS_USER" >> /tmp/petget_installed_patterns_all
  #120822 this code also in pkg_chooser.sh, find alt deb names...
  case $DISTRO_BINARY_COMPAT in
   ubuntu|debian|devuan|raspbian)
    #120904 bugfix, was very slow...
-   MODIF1=`stat --format=%Y /root/.packages/user-installed-packages` #seconds since epoch.
+   MODIF1=`stat --format=%Y /var/packages/user-installed-packages` #seconds since epoch.
    MODIF2=0
    [ -f /var/local/petget/installed_alt_ptns_pet_user ] && MODIF2=`stat --format=%Y /var/local/petget/installed_alt_ptns_pet_user`
    if [ $MODIF1 -gt $MODIF2 ];then
-    INSTALLED_PTNS_PET="$(grep '\.pet|' /root/.packages/user-installed-packages | cut -f 2 -d '|')"
+    INSTALLED_PTNS_PET="$(grep '\.pet|' /var/packages/user-installed-packages | cut -f 2 -d '|')"
     if [ "$INSTALLED_PTNS_PET" != "" ];then
      xINSTALLED_PTNS_PET="$(echo "$INSTALLED_PTNS_PET" | sed -e 's%^%/%' -e 's%$%|%' -e 's%\-%\\-%g')"
      echo "$xINSTALLED_PTNS_PET" > /tmp/petget/fmp_xipp
-     INSTALLED_ALT_NAMES="$(grep --no-filename -f /tmp/petget/fmp_xipp /root/.packages/Packages-${DISTRO_BINARY_COMPAT}-${DISTRO_COMPAT_VERSION}-* | cut -f 2 -d '|')"
+     INSTALLED_ALT_NAMES="$(grep --no-filename -f /tmp/petget/fmp_xipp /var/packages/Packages-${DISTRO_BINARY_COMPAT}-${DISTRO_COMPAT_VERSION}-* | cut -f 2 -d '|')"
      if [ "$INSTALLED_ALT_NAMES" ];then
       INSTALLED_ALT_PTNS="$(echo "$INSTALLED_ALT_NAMES" | sed -e 's%^%|%' -e 's%$%|%' -e 's%\-%\\-%g')"
       echo "$INSTALLED_ALT_PTNS" > /var/local/petget/installed_alt_ptns_pet_user

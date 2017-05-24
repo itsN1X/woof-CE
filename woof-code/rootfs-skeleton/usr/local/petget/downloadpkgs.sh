@@ -40,12 +40,12 @@ PASSEDPARAM=""
 FLAGPET="" #101016
 
 . /etc/DISTRO_SPECS #has DISTRO_BINARY_COMPAT, DISTRO_COMPAT_VERSION
-. /root/.packages/DISTRO_PKGS_SPECS #
-. /root/.packages/DISTRO_PET_REPOS #has PET_REPOS, PACKAGELISTS_PET_ORDER
-. /root/.packages/DISTRO_COMPAT_REPOS #v431 has REPOS_DISTRO_COMPAT
+. /var/packages/DISTRO_PKGS_SPECS #
+. /var/packages/DISTRO_PET_REPOS #has PET_REPOS, PACKAGELISTS_PET_ORDER
+. /var/packages/DISTRO_COMPAT_REPOS #v431 has REPOS_DISTRO_COMPAT
 
-if [ -f /root/.packages/download_path ]; then
- . /root/.packages/download_path
+if [ -f /var/packages/download_path ]; then
+ . /var/packages/download_path
  [ -d "$DL_PATH" -a -w "$DL_PATH" ] && DL_PATH="$DL_PATH" || DL_PATH=/root
 else
  DL_PATH=/root
@@ -80,7 +80,7 @@ do
    done
   ;;
   *) #a compat pkg.
-   #have the compat-distro repo urls in /root/.packages/DISTRO_PKGS_SPECS,
+   #have the compat-distro repo urls in /var/packages/DISTRO_PKGS_SPECS,
    #variable REPOS_DISTRO_COMPAT ...
    #REPOS_DISTRO_COMPAT has the associated Packages-* local database file...
    for ONEURLENTRY in $REPOS_DISTRO_COMPAT #ex: z|http://mirror.aarnet.edu.au/pub/slackware/slackware-14.2|Packages-slackware-ponce-official
@@ -429,7 +429,7 @@ fi
   elPATTERN="`echo -n "$ENTRY_LOCALE" | tr ',' '\n' | sed -e 's%^%/%' -e 's%$%/%' | tr '\n' '|'`"
   for PKGNAME in $INSTALLEDPKGNAMES
   do
-   cat /root/.packages/${PKGNAME}.files |
+   cat /var/packages/${PKGNAME}.files |
    while read ONEFILE
    do
     [ ! -f "$ONEFILE" ] && continue
@@ -438,8 +438,8 @@ fi
     if [ "$ENTRY_LOCALE" != "" ];then
      if [ "`echo -n "$ONEFILE" | grep --extended-regexp '/locale/|/nls/|/i18n/' | grep -v -E "$elPATTERN"`" != "" ];then
       rm -f "$ONEFILE"
-      grep -v "$ONEFILE" /root/.packages/${PKGNAME}.files > /tmp/petget_pkgfiles_temp
-      mv -f /tmp/petget_pkgfiles_temp /root/.packages/${PKGNAME}.files
+      grep -v "$ONEFILE" /var/packages/${PKGNAME}.files > /tmp/petget_pkgfiles_temp
+      mv -f /tmp/petget_pkgfiles_temp /var/packages/${PKGNAME}.files
       continue
      fi
     fi
@@ -447,8 +447,8 @@ fi
     if [ "$CHECK_DOCDEL" = "true" ];then
      if [ "`echo -n "$ONEFILE" | grep --extended-regexp '/man/|/doc/|/doc-base/|/docs/|/info/|/gtk-doc/|/faq/|/manual/|/examples/|/help/|/htdocs/'`" != "" ];then
       rm -f "$ONEFILE" 2>/dev/null
-      grep -v "$ONEFILE" /root/.packages/${PKGNAME}.files > /tmp/petget_pkgfiles_temp
-      mv -f /tmp/petget_pkgfiles_temp /root/.packages/${PKGNAME}.files
+      grep -v "$ONEFILE" /var/packages/${PKGNAME}.files > /tmp/petget_pkgfiles_temp
+      mv -f /tmp/petget_pkgfiles_temp /var/packages/${PKGNAME}.files
       continue
      fi
     fi
@@ -456,15 +456,15 @@ fi
     if [ "$CHECK_DEVDEL" = "true" ];then
      if [ "`echo -n "$ONEFILE" | grep --extended-regexp '/include/|/pkgconfig/|/aclocal|/cvs/|/svn/'`" != "" ];then
       rm -f "$ONEFILE" 2>/dev/null
-      grep -v "$ONEFILE" /root/.packages/${PKGNAME}.files > /tmp/petget_pkgfiles_temp
-      mv -f /tmp/petget_pkgfiles_temp /root/.packages/${PKGNAME}.files
+      grep -v "$ONEFILE" /var/packages/${PKGNAME}.files > /tmp/petget_pkgfiles_temp
+      mv -f /tmp/petget_pkgfiles_temp /var/packages/${PKGNAME}.files
       continue
      fi
      #all .a and .la files... and any stray .m4 files...
      if [ "`echo -n "$ONEBASE" | grep --extended-regexp '\.a$|\.la$|\.m4$'`" != "" ];then
       rm -f "$ONEFILE"
-      grep -v "$ONEFILE" /root/.packages/${PKGNAME}.files > /tmp/petget_pkgfiles_temp
-      mv -f /tmp/petget_pkgfiles_temp /root/.packages/${PKGNAME}.files
+      grep -v "$ONEFILE" /var/packages/${PKGNAME}.files > /tmp/petget_pkgfiles_temp
+      mv -f /tmp/petget_pkgfiles_temp /var/packages/${PKGNAME}.files
      fi
     fi
    done

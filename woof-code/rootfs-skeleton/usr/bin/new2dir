@@ -228,20 +228,20 @@ else
 fi
 sync
 #create list of installed files...
-cat /tmp/pkginstall.list | grep '#success$' | tr -s '\t' | tr '&' ' ' | tr '\t' '&' | egrep '^[345]&open&|^0&chmod&' | grep --extended-regexp -v '&/dev/tty&|&/dev/null&|&/root/\.packages/|&/tmp/|&/root/\.icewm/|&/proc/|&/sys/|DotPupTmpDir|/\.myownmenuerc' | grep -E -v '&/initrd|&/mnt/' | cut -f 3 -d '&' | sort -u > ${RELPATH}/${EXE_PKGNAME}.files #120220 120602
+cat /tmp/pkginstall.list | grep '#success$' | tr -s '\t' | tr '&' ' ' | tr '\t' '&' | egrep '^[345]&open&|^0&chmod&' | grep --extended-regexp -v '&/dev/tty&|&/dev/null&|&/var/packages/|&/tmp/|&/root/\.icewm/|&/proc/|&/sys/|DotPupTmpDir|/\.myownmenuerc' | grep -E -v '&/initrd|&/mnt/' | cut -f 3 -d '&' | sort -u > ${RELPATH}/${EXE_PKGNAME}.files #120220 120602
 #...list will only have created files, not created directories, so an empty
 #   directory won't get recorded.
 
 #bad if we miss out installing an empty directory...
-cat /tmp/pkginstall.list | grep '#success$' | tr -s '\t' | tr '&' ' ' | tr '\t' '&' | grep '^0&mkdir&' | grep --extended-regexp -v '&/dev/tty&|&/dev/null&|&/root/\.packages/|&/tmp/|&/root/\.icewm/|&/proc/|&/sys/|DotPupTmpDir|/\.myownmenuerc' | grep -E -v '&/initrd|&/mnt/' | cut -f 3 -d '&' | sed -e 's/^\/\//\//g' > /tmp/${EXE_PKGNAME}.dirs
+cat /tmp/pkginstall.list | grep '#success$' | tr -s '\t' | tr '&' ' ' | tr '\t' '&' | grep '^0&mkdir&' | grep --extended-regexp -v '&/dev/tty&|&/dev/null&|&/var/packages/|&/tmp/|&/root/\.icewm/|&/proc/|&/sys/|DotPupTmpDir|/\.myownmenuerc' | grep -E -v '&/initrd|&/mnt/' | cut -f 3 -d '&' | sed -e 's/^\/\//\//g' > /tmp/${EXE_PKGNAME}.dirs
 
 sync
 #pick up created symlinks...
-cat /tmp/pkginstall.list | grep '#success$' | tr -s '\t' | tr '&' ' ' | tr '\t' '&' | grep '^0&symlink&' | grep --extended-regexp -v '&/dev/tty&|&/dev/null&|&/root/\.packages/|&/tmp/|&/root/\.icewm/|&/proc/|&/sys/|DotPupTmpDir|/\.myownmenuerc' | grep -E -v '&/initrd|&/mnt/' | cut -f 4 -d '&' >> ${RELPATH}/${EXE_PKGNAME}.files
+cat /tmp/pkginstall.list | grep '#success$' | tr -s '\t' | tr '&' ' ' | tr '\t' '&' | grep '^0&symlink&' | grep --extended-regexp -v '&/dev/tty&|&/dev/null&|&/var/packages/|&/tmp/|&/root/\.icewm/|&/proc/|&/sys/|DotPupTmpDir|/\.myownmenuerc' | grep -E -v '&/initrd|&/mnt/' | cut -f 4 -d '&' >> ${RELPATH}/${EXE_PKGNAME}.files
 
 sync
 #problem if there is a post-install script that moves or renames a file...
-cat /tmp/pkginstall.list | grep '#success$' | tr -s '\t' | tr '&' ' ' | tr '\t' '&' | grep '^0&rename&' | grep --extended-regexp -v '&/dev/tty&|&/dev/null&|&/root/\.packages/|&/tmp/|&/root/\.icewm/|&/proc/|&/sys/|DotPupTmpDir|/\.myownmenuerc' | grep -E -v '&/initrd|&/mnt/' | cut -f 3,4 -d '&' | tr '\n' ' ' > /tmp/${EXE_PKGNAME}.moved.files
+cat /tmp/pkginstall.list | grep '#success$' | tr -s '\t' | tr '&' ' ' | tr '\t' '&' | grep '^0&rename&' | grep --extended-regexp -v '&/dev/tty&|&/dev/null&|&/var/packages/|&/tmp/|&/root/\.icewm/|&/proc/|&/sys/|DotPupTmpDir|/\.myownmenuerc' | grep -E -v '&/initrd|&/mnt/' | cut -f 3,4 -d '&' | tr '\n' ' ' > /tmp/${EXE_PKGNAME}.moved.files
 #find out if any installed file got moved/renamed...
 if [ -s /tmp/${EXE_PKGNAME}.moved.files ];then
  for ONEMOVED in `cat /tmp/${EXE_PKGNAME}.moved.files`

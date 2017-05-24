@@ -5,14 +5,14 @@
 #  /usr/local/petget/installpreview.sh, 3builddistro (in Woof).
 #w012 commented-out drop-down for all installed pkgs as too big in Ubuntu-Puppy.
 #w016 support/find_homepages (in Woof) used to manually update HOMEPAGEDB variable.
-#w019 now have /root/.packages/PKGS_HOMEPAGES
+#w019 now have /var/packages/PKGS_HOMEPAGES
 #w464 reintroduce dropdown help for all builtin packages.
 #v423 file PKGS_HOMEPAGES is now a db of all known pkgs, not just in puppy.
 #120225 copy from raw doc files.
 
 export LANG=C
 . /etc/DISTRO_SPECS #has DISTRO_BINARY_COMPAT, DISTRO_COMPAT_VERSION, DISTRO_PUPPYDATE
-. /root/.packages/DISTRO_PKGS_SPECS
+. /var/packages/DISTRO_PKGS_SPECS
 
 WKGDIR="`pwd`"
 
@@ -70,7 +70,7 @@ do
   nEXPATTERN="^$NAMEONLY "
   [[ "${EXCLLISTsd}" == *${EXPATTERN}* ]] && continue
   HOMESITE="http://en.wikipedia.org/wiki/${NAMEONLY}"
-  PKGHOME="`grep -i -m1 "$nEXPATTERN" /root/.packages/PKGS_HOMEPAGES`"
+  PKGHOME="`grep -i -m1 "$nEXPATTERN" /var/packages/PKGS_HOMEPAGES`"
   REALHOME=${PKGHOME#* } ## this assumes: name url
   [ "$REALHOME" != "" ] && HOMESITE="$REALHOME"
   echo "<option value=\"${HOMESITE}\">${ONEINFO}"
@@ -88,7 +88,7 @@ echo '<p>Complete list of packages (in Puppy or not):</p>
 <select name="site2" size="1" onchange="javascript:formHandler2()">
 '
 
-awk '{ print "<option value=\"" $2 "\">" $1 }' /root/.packages/PKGS_HOMEPAGES
+awk '{ print "<option value=\"" $2 "\">" $1 }' /var/packages/PKGS_HOMEPAGES
 
 echo '</select>
 </form>

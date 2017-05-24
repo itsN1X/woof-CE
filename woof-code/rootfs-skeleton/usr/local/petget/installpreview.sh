@@ -30,7 +30,7 @@ export OUTPUT_CHARSET=UTF-8
 [ "$TREE1" = "" ] && exit #120504 nothing to install.
 
 . /etc/DISTRO_SPECS #has DISTRO_BINARY_COMPAT, DISTRO_COMPAT_VERSION
-. /root/.packages/DISTRO_PKGS_SPECS
+. /var/packages/DISTRO_PKGS_SPECS
 
 if [ ! -f /tmp/install_quietly ]; then
  . /usr/lib/gtkdialog/box_splash -close never -text "$(gettext 'Please wait, processing package database files...')" &
@@ -63,7 +63,7 @@ fi
 
 rm -f /tmp/petget_missing_dbentries-* 2>/dev/null
 
-DB_ENTRY="`grep "$tPATTERN" /root/.packages/$DB_FILE | head -n 1`"
+DB_ENTRY="`grep "$tPATTERN" /var/packages/$DB_FILE | head -n 1`"
 #line format: pkgname|nameonly|version|pkgrelease|category|size|path|fullfilename|dependencies|description|
 #optionally on the end: compileddistro|compiledrelease|repo| (fields 11,12,13)
 
@@ -448,8 +448,8 @@ fi
 iUPDATE='no'
 for iONE in `cat /tmp/petget_missing_dbentries-* | cut -f 1 -d '|' | tr '\n' ' '`
 do
- if [ -f /root/.packages/${iONE}.files ]; then
-  [ "`grep 'usr/share/icons/hicolor' /root/.packages/${iONE}.files`" != "" ] \
+ if [ -f /var/packages/${iONE}.files ]; then
+  [ "`grep 'usr/share/icons/hicolor' /var/packages/${iONE}.files`" != "" ] \
    && echo yes >> /tmp/iUPDATE
  fi
 done

@@ -148,16 +148,16 @@ if [ -f /initrd/tmp/version_update_flag ]; then
  #need to identify files that absolutely must always be updated, when
  #there is a new version, and forcefully copy them...
  echo "Updating w.m. menus..."
- cp -af ${NEWFILESMNTPT}/root/.packages/Packages-* /root/.packages/
- cp -af ${NEWFILESMNTPT}/root/.packages/DISTRO_PKGS_SPECS /root/.packages/
+ cp -af ${NEWFILESMNTPT}/var/packages/Packages-* /var/packages/
+ cp -af ${NEWFILESMNTPT}/var/packages/DISTRO_PKGS_SPECS /var/packages/
  
- rm -rf /root/.packages/builtin_files
- cp -af ${NEWFILESMNTPT}/root/.packages/builtin_files /root/.packages/
- cp -af ${NEWFILESMNTPT}/root/.packages/woof-installed-packages /root/.packages/
- PKG_REPOS_ENABLED="`grep '^PKG_REPOS_ENABLED' /root/.packages/PKGS_MANAGEMENT | cut -f 2 -d "'"`" #geany'
- grep -v '^PKG_REPOS_ENABLED' ${NEWFILESMNTPT}/root/.packages/PKGS_MANAGEMENT > /tmp/PKGS_MANAGEMENT-tmp
- mv -f /tmp/PKGS_MANAGEMENT-tmp /root/.packages/PKGS_MANAGEMENT
- echo "PKG_REPOS_ENABLED='${PKG_REPOS_ENABLED}'" >> /root/.packages/PKGS_MANAGEMENT
+ rm -rf /var/packages/builtin_files
+ cp -af ${NEWFILESMNTPT}/var/packages/builtin_files /var/packages/
+ cp -af ${NEWFILESMNTPT}/var/packages/woof-installed-packages /var/packages/
+ PKG_REPOS_ENABLED="`grep '^PKG_REPOS_ENABLED' /var/packages/PKGS_MANAGEMENT | cut -f 2 -d "'"`" #geany'
+ grep -v '^PKG_REPOS_ENABLED' ${NEWFILESMNTPT}/var/packages/PKGS_MANAGEMENT > /tmp/PKGS_MANAGEMENT-tmp
+ mv -f /tmp/PKGS_MANAGEMENT-tmp /var/packages/PKGS_MANAGEMENT
+ echo "PKG_REPOS_ENABLED='${PKG_REPOS_ENABLED}'" >> /var/packages/PKGS_MANAGEMENT
 
  cp -af ${NEWFILESMNTPT}/etc/DISTRO_SPECS /etc/
  cp -af /root/.fvwm95rc /root/DOTfvwm95rc.bak 2>/dev/null

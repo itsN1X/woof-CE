@@ -25,7 +25,7 @@ No_lbl="$(gettext 'No')"
 MSG1="`gettext \"Simple utility to 'delete' packages that are builtin\nto the read-only .sfs file (Squashfs filesystem)\"`"
 
 #!/bin/sh
-D=$HOME/.packages/builtin_files
+D=/var/packages/builtin_files
 
 while [ 1 ];do
  FIXMENU='no' #101222
@@ -38,18 +38,18 @@ Puppy (see Setup menu), you can use this little program to 'pretend' to delete\n
 them -- and they will really be gone in the remastered CD. So, for example if\n
 you remove SeaMonkey, it will be gone in the remastered CD thus reducing the\n
 size of the .iso live-CD file.\n\n
-Technical note: the lists of builtin files is at /root/.packages/builtin_files,\n
-        the list of builtin pkgs is in /root/.packages/woof-installed-packages.")" --combobox "$(gettext 'Select package to remove:')" 0 0 $PKGS`
+Technical note: the lists of builtin files is at /var/packages/builtin_files,\n
+        the list of builtin pkgs is in /var/packages/woof-installed-packages.")" --combobox "$(gettext 'Select package to remove:')" 0 0 $PKGS`
  if [ "$PKG" ];then
   aREGEX="|${PKG}|"
-  DESCR="`grep "$aREGEX" /root/.packages/woof-installed-packages |cut -d "|" -f 10`"
+  DESCR="`grep "$aREGEX" /var/packages/woof-installed-packages |cut -d "|" -f 10`"
   Xdialog --left --screen-center --backtitle "$(gettext 'Confirm that you want to delete') '${PKG}'" --title "$(gettext 'Remove builtin packages')" --ok-label "$Yes_lbl" --cancel-label "$No_lbl" --yesno "$(gettext 'Description of package:')\n
 ${DESCR}\n\n
 $(gettext 'For information only, these are dependencies of') '${PKG}':\n
-`grep "$aREGEX" /root/.packages/woof-installed-packages |cut -d "|" -f 9 | sed -e 's%^+%%' -e 's%,+% %g'`
+`grep "$aREGEX" /var/packages/woof-installed-packages |cut -d "|" -f 9 | sed -e 's%^+%%' -e 's%,+% %g'`
 \n
 `eval_gettext \"Warning, removing '\\\${PKG}' _may_ break the following packages:\"`\n
-`grep +${PKG} /root/.packages/woof-installed-packages |cut -d "|" -f 2 |tr "\n" " "`
+`grep +${PKG} /var/packages/woof-installed-packages |cut -d "|" -f 2 |tr "\n" " "`
 \n
 $(gettext 'Continue?')" 0 0
   if [ $? -eq 0 ];then
@@ -71,8 +71,8 @@ $(gettext 'Continue?')" 0 0
     [ "${xx:0:1}" = "/" ] && [ -d "$xx" ] && [ ! "`ls "$xx"`" ] && rmdir "$xx"
    done #160928 end
    rm $D/$PKG
-   grep -v "$aREGEX" /root/.packages/woof-installed-packages > /tmp/woof-installed-packages-cut2
-   mv -f /tmp/woof-installed-packages-cut2 /root/.packages/woof-installed-packages
+   grep -v "$aREGEX" /var/packages/woof-installed-packages > /tmp/woof-installed-packages-cut2
+   mv -f /tmp/woof-installed-packages-cut2 /var/packages/woof-installed-packages
    MSG1="`eval_gettext \"Package '\\\${PKG}' was removed. Choose another...\"`"
    if [ "$FIXMENU" = "yes" ];then #101222
     fixmenus

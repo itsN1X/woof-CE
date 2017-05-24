@@ -18,7 +18,7 @@ do
  ONENAMEONLY="$(echo -n "$ONEALREADYINSTALLED" | cut -f 2 -d '|')"
  ONEVERSION="$(echo -n "$ONEALREADYINSTALLED" | cut -f 3 -d '|')"
  onoPTN="|${ONENAMEONLY}|"
- INSTALLEDPKGS="$(cat /root/.packages/layers-installed-packages /root/.packages/user-installed-packages | grep "$onoPTN" | cut -f 1,3 -d '|' | tr '\n' ' ')"
+ INSTALLEDPKGS="$(cat /var/packages/layers-installed-packages /var/packages/user-installed-packages | grep "$onoPTN" | cut -f 1,3 -d '|' | tr '\n' ' ')"
  for AINSTALLEDPKG in $INSTALLEDPKGS
  do
   AIPKG="$(echo -n "$AINSTALLEDPKG" | cut -f 1 -d '|')"

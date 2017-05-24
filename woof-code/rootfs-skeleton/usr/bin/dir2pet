@@ -386,7 +386,7 @@ the main package
      echo " necessary to specify sub-dependencies, as if 'gtkdialog3'"
      echo " needs to be installed it has its own dependency list."
      echo "NOTE2: You can lookup the dependency-list of each package in the"
-     echo " /root/.packages/Packages-* database files"
+     echo " /var/packages/Packages-* database files"
      echo "NOTE3: it is not required to specify package version numbers,"
      echo " VERSION NUMBERS NOT YET SUPPORTED BY PACKAGE MANAGER"
      echo "NOTE4: If you don't know what to specify, just press ENTER key"

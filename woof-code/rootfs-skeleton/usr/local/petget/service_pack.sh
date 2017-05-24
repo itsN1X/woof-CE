@@ -15,7 +15,7 @@ export TEXTDOMAIN=petget___service_pack.sh
 export OUTPUT_CHARSET=UTF-8
 
 . /etc/DISTRO_SPECS #has DISTRO_DB_SUBNAME
-. /root/.packages/DISTRO_PET_REPOS #has PET_REPOS, PKG_DOCS_PET_REPOS
+. /var/packages/DISTRO_PET_REPOS #has PET_REPOS, PKG_DOCS_PET_REPOS
 
 mkdir -p /tmp/petget
 
@@ -48,7 +48,7 @@ spPTN1="|service_pack.*\.pet|"
 
 #121217 precaution, check highest already installed...
 INSTBIGGEST="$DISTRO_VERSION" #140106
-INSTALLEDVERS="$(grep "$spPTN1" /root/.packages/user-installed-packages /root/.packages/woof-installed-packages | cut -f 3 -d '|' | cut -f 3 -d '_' | cut -f 1 -d '-' | tr '\n' ' ')"
+INSTALLEDVERS="$(grep "$spPTN1" /var/packages/user-installed-packages /var/packages/woof-installed-packages | cut -f 3 -d '|' | cut -f 3 -d '_' | cut -f 1 -d '-' | tr '\n' ' ')"
 for ONEIN in $INSTALLEDVERS
 do
  if vercmp $ONEIN ge $INSTBIGGEST;then
@@ -71,7 +71,7 @@ do
    if vercmp $ENDVER gt $DISTRO_VERSION;then #121129
     #check whether already installed...
     spPTN2="_TO_${ENDVER}"
-    FNDINST="$(cat /root/.packages/user-installed-packages /root/.packages/woof-installed-packages | grep "$spPTN1" | grep "$spPTN2" | cut -f 1 -d '|')"
+    FNDINST="$(cat /var/packages/user-installed-packages /var/packages/woof-installed-packages | grep "$spPTN1" | grep "$spPTN2" | cut -f 1 -d '|')"
     [ "$FNDINST" != "" ] && continue
     CNT=`expr $CNT + 1`
     #find the size...

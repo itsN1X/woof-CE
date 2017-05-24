@@ -75,13 +75,13 @@ DLPKG_PATH="`dirname "$DLPKG"`"  #ex: /root
 DL_SAVE_FLAG=$(cat /var/local/petget/nd_category 2>/dev/null)
 
 clean_and_die () {
-  rm -f /root/.packages/${DLPKG_NAME}.files
+  rm -f /var/packages/${DLPKG_NAME}.files
   exit 1
 }
 
 # 6sep10 shinobar: installing files under /mnt is danger
 install_path_check() {
-  FILELIST="/root/.packages/${DLPKG_NAME}.files"
+  FILELIST="/var/packages/${DLPKG_NAME}.files"
   [ -s "$FILELIST" ] || return 0 #120126 noryb009: typo
   grep -q '^/mnt' "$FILELIST" || return 0
   MNTDIRS=$(cat "$FILELIST" | grep '^/mnt/.*/$' | cut -d'/' -f1-3  | tail -n 1)
@@ -125,7 +125,7 @@ DLPKG_NAME="`cat /tmp/petget_missing_dbentries-Packages-* | grep "$dbPATTERN" | 
 
 #131222 do not allow duplicate installs...
 PTN1='^'"$DLPKG_NAME"'|'
-if [ "`grep "$PTN1" /root/.packages/user-installed-packages`" != "" ];then
+if [ "`grep "$PTN1" /var/packages/user-installed-packages`" != "" ];then
  if [ ! $DISPLAY ];then
   [ -f /tmp/install_quietly ] && DISPTIME1="--timeout 3" || DISPTIME1=''
   LANG=$LANG_USER
@@ -271,13 +271,13 @@ case $DLPKG_BASE in
   if [ "`echo "$PETFILES" | grep -m1 '^\\./'`" != "" ];then
    #ttuuxx has created some pets with './' prefix...
    pPATTERN="s%^\\./${DLPKG_NAME}%%"
-   echo "$PETFILES" | sed -e "$pPATTERN" > /root/.packages/${DLPKG_NAME}.files
+   echo "$PETFILES" | sed -e "$pPATTERN" > /var/packages/${DLPKG_NAME}.files
    install_path_check
    tar -a -x --strip=2 --directory=${DIRECTSAVEPATH}/ -f ${tarball} #120102. 120107 remove --unlink-first
   else
    #new2dir and tgz2pet creates them this way...
    pPATTERN="s%^${DLPKG_NAME}%%"
-   echo "$PETFILES" | sed -e "$pPATTERN" > /root/.packages/${DLPKG_NAME}.files
+   echo "$PETFILES" | sed -e "$pPATTERN" > /var/packages/${DLPKG_NAME}.files
    install_path_check
    tar -a -x --strip=1 --directory=${DIRECTSAVEPATH}/ -f ${tarball} #120102. 120107. 131122
   fi
@@ -288,7 +288,7 @@ case $DLPKG_BASE in
   DLPKG_MAIN="`basename $DLPKG_BASE .deb`"
   PFILES="`dpkg-deb --contents $DLPKG_BASE | tr -s ' ' | cut -f 6 -d ' '`"
   [ $? -ne 0 ] && exit 1
-  echo "$PFILES" > /root/.packages/${DLPKG_NAME}.files
+  echo "$PFILES" > /var/packages/${DLPKG_NAME}.files
   install_path_check
   # Workaround to avoid overwriting the $DISTRO_ARCHDIR symlink.  
   if [ "$DISTRO_ARCHDIR" != "" -a "$(echo "$PFILES" | grep "$DISTRO_ARCHDIR")" != "" ]; then
@@ -314,7 +314,7 @@ case $DLPKG_BASE in
   DLPKG_MAIN=${DLPKG_MAIN%*.tar.*}    #remove .tar.xx extension
   DLPKG_MAIN=${DLPKG_MAIN%.t[gx]z}    #remove .t[gx]z extension
   PFILES="`tar --list -a -f $DLPKG_BASE`" || exit 1
-  echo "$PFILES" > /root/.packages/${DLPKG_NAME}.files
+  echo "$PFILES" > /var/packages/${DLPKG_NAME}.files
   install_path_check
   tar -a -x --directory=${DIRECTSAVEPATH}/ -f $DLPKG_BASE #120102. 120107
   [ $? -ne 0 ] && clean_and_die
@@ -325,7 +325,7 @@ case $DLPKG_BASE in
   [ $? -ne 0 ] && exit 1
   PFILES="`busybox rpm -qpl $DLPKG_BASE`"
   [ $? -ne 0 ] && exit 1
-  echo "$PFILES" > /root/.packages/${DLPKG_NAME}.files
+  echo "$PFILES" > /var/packages/${DLPKG_NAME}.files
   install_path_check
   #110705 rpm -i does not work for mageia pkgs...
   exploderpm -i $DLPKG_BASE
@@ -388,8 +388,8 @@ if [ "$PUPMODE" = "2" ]; then #from BK's quirky6.1
 	[ "$DL_SAVE_FLAG" != "true" ] && rm -f $DLPKG_BASE 2>/dev/null
 	rm -f $DLPKG_MAIN.tar.gz 2>/dev/null
 	#pkgname.files may need to be fixed...
-	FIXEDFILES="`cat /root/.packages/${DLPKG_NAME}.files | grep -v '^\\./$'| grep -v '^/$' | sed -e 's%^\\.%%' -e 's%^%/%' -e 's%^//%/%'`"
-	echo "$FIXEDFILES" > /root/.packages/${DLPKG_NAME}.files 
+	FIXEDFILES="`cat /var/packages/${DLPKG_NAME}.files | grep -v '^\\./$'| grep -v '^/$' | sed -e 's%^\\.%%' -e 's%^%/%' -e 's%^//%/%'`"
+	echo "$FIXEDFILES" > /var/packages/${DLPKG_NAME}.files 
 
 else #-- anything other than PUPMODE 2 (full install) --
 
@@ -397,13 +397,13 @@ else #-- anything other than PUPMODE 2 (full install) --
 	rm -f $DLPKG_MAIN.tar.${EXT} 2>/dev/null #131122
 
 	#pkgname.files may need to be fixed...
-	FIXEDFILES="`cat /root/.packages/${DLPKG_NAME}.files | grep -v '^\\./$'| grep -v '^/$' | sed -e 's%^\\.%%' -e 's%^%/%' -e 's%^//%/%'`"
-	echo "$FIXEDFILES" > /root/.packages/${DLPKG_NAME}.files
+	FIXEDFILES="`cat /var/packages/${DLPKG_NAME}.files | grep -v '^\\./$'| grep -v '^/$' | sed -e 's%^\\.%%' -e 's%^%/%' -e 's%^//%/%'`"
+	echo "$FIXEDFILES" > /var/packages/${DLPKG_NAME}.files
 
 	#120102 install may have overwritten a symlink-to-dir...
 	#tar defaults to not following symlinks, for both dirs and files, but i want to follow symlinks
 	#for dirs but not for files. so, fix here... (note, dir entries in .files have / on end)
-	cat /root/.packages/${DLPKG_NAME}.files | grep '[a-zA-Z0-9]/$' | sed -e 's%/$%%' | grep -v '^/mnt' |
+	cat /var/packages/${DLPKG_NAME}.files | grep '[a-zA-Z0-9]/$' | sed -e 's%/$%%' | grep -v '^/mnt' |
 	while read ONESPEC
 	do
 	 if [ -d "${DIRECTSAVEPATH}${ONESPEC}" ];then
@@ -479,14 +479,14 @@ else #-- anything other than PUPMODE 2 (full install) --
 	  ONEWHITEOUTFILE="`basename "$ONEWHITEOUT"`"
 	  ONEWHITEOUTPATH="`dirname "$ONEWHITEOUT"`"
 	  if [ "$ONEWHITEOUTFILE" = ".wh.__dir_opaque" ];then
-	   [ "`grep "$ONEWHITEOUTPATH" /root/.packages/${DLPKG_NAME}.files`" != "" ] && rm -f "/initrd/pup_rw/$ONEWHITEOUT"
+	   [ "`grep "$ONEWHITEOUTPATH" /var/packages/${DLPKG_NAME}.files`" != "" ] && rm -f "/initrd/pup_rw/$ONEWHITEOUT"
 	   continue
 	  fi
 	  ONEPATTERN="`echo -n "$ONEWHITEOUT" | sed -e 's%/\\.wh\\.%/%'`"'/*'	;#echo "$ONEPATTERN" >&2
-	  [ "`grep -x "$ONEPATTERN" /root/.packages/${DLPKG_NAME}.files`" != "" ] && rm -f "/initrd/pup_rw/$ONEWHITEOUT"
+	  [ "`grep -x "$ONEPATTERN" /var/packages/${DLPKG_NAME}.files`" != "" ] && rm -f "/initrd/pup_rw/$ONEWHITEOUT"
 	 done
 	 #111229 /usr/local/petget/removepreview.sh when uninstalling a pkg, may have copied a file from sfs-layer to top, check...
-	 cat /root/.packages/${DLPKG_NAME}.files |
+	 cat /var/packages/${DLPKG_NAME}.files |
 	 while read ONESPEC
 	 do
 	  [ "$ONESPEC" = "" ] && continue #precaution.
@@ -540,7 +540,7 @@ fi
 
 #v424 .pet pkgs may have a post-uninstall script...
 if [ -f $DIRECTSAVEPATH/puninstall.sh ];then
- mv -f $DIRECTSAVEPATH/puninstall.sh /root/.packages/${DLPKG_NAME}.remove
+ mv -f $DIRECTSAVEPATH/puninstall.sh /var/packages/${DLPKG_NAME}.remove
 fi
 
 #w465 <pkgname>.pet.specs is in older pet pkgs, just dump it...
@@ -548,7 +548,7 @@ fi
 rm -f $DIRECTSAVEPATH/*.pet.specs 2>/dev/null
 #...note, this has a setting to prevent .files and entry in user-installed-packages, so install not registered.
 
-#add entry to /root/.packages/user-installed-packages...
+#add entry to /var/packages/user-installed-packages...
 #w465 a pet pkg may have /pet.specs which has a db entry...
 if [ -f $DIRECTSAVEPATH/pet.specs -a -s $DIRECTSAVEPATH/pet.specs ];then #w482 ignore zero-byte file.
  DB_ENTRY="`cat $DIRECTSAVEPATH/pet.specs | head -n 1`"
@@ -588,7 +588,7 @@ iPATTERN="s%^Icon=.*%Icon=${DEFICON}%"
 #121119 if only one .desktop file, first check if a match in /usr/local/petget/categories.dat...
 CATDONE='no'
 if [ -f /usr/local/petget/categories.dat ];then #precaution, but it will be there.
- NUMDESKFILE="$(grep 'share/applications/.*\.desktop$' /root/.packages/${DLPKG_NAME}.files | wc -l)"
+ NUMDESKFILE="$(grep 'share/applications/.*\.desktop$' /var/packages/${DLPKG_NAME}.files | wc -l)"
  if [ "$NUMDESKFILE" = "1" ];then
   #to lookup categories.dat, we need to know the generic name of the package, which may be different from pkg name...
   #db entry format: pkgname|nameonly|version|pkgrelease|category|size|path|fullfilename|dependencies|description|compileddistro|compiledrelease|repo|
@@ -618,7 +618,7 @@ if [ -f /usr/local/petget/categories.dat ];then #precaution, but it will be ther
  fi
 fi
 
-for ONEDOT in `grep 'share/applications/.*\.desktop$' /root/.packages/${DLPKG_NAME}.files | tr '\n' ' '` #121119 exclude other strange .desktop files.
+for ONEDOT in `grep 'share/applications/.*\.desktop$' /var/packages/${DLPKG_NAME}.files | tr '\n' ' '` #121119 exclude other strange .desktop files.
 do
  #120901 get rid of param on end of Exec, ex: Exec=gimp-2.8 %U
  #sed -i -e 's/\(^Exec=[^%]*\).*/\1/' -e 's/ *$//' $ONEDOT #'s/\(^Exec=[^ ]*\).*/\1/'
@@ -737,21 +737,21 @@ do
 done
 
 #due to images at / in .pet and post-install script, .files may have some invalid entries...
-INSTFILES="`cat /root/.packages/${DLPKG_NAME}.files`"
+INSTFILES="`cat /var/packages/${DLPKG_NAME}.files`"
 echo "$INSTFILES" |
 while read ONEFILE
 do
  if [ ! -e "$ONEFILE" ];then
   ofPATTERN='^'"$ONEFILE"'$'
-  grep -v "$ofPATTERN" /root/.packages/${DLPKG_NAME}.files > /tmp/petget_instfiles
-  mv -f /tmp/petget_instfiles /root/.packages/${DLPKG_NAME}.files
+  grep -v "$ofPATTERN" /var/packages/${DLPKG_NAME}.files > /tmp/petget_instfiles
+  mv -f /tmp/petget_instfiles /var/packages/${DLPKG_NAME}.files
  fi
 done
 
 #w482 DB_ENTRY may be missing DB_category and DB_description fields...
 #pkgname|nameonly|version|pkgrelease|category|size|path|fullfilename|dependencies|description|
 #optionally on the end: compileddistro|compiledrelease|repo| (fields 11,12,13)
-DESKTOPFILE="`grep '\.desktop$' /root/.packages/${DLPKG_NAME}.files | head -n 1`"
+DESKTOPFILE="`grep '\.desktop$' /var/packages/${DLPKG_NAME}.files | head -n 1`"
 if [ "$DESKTOPFILE" != "" ];then
  DB_category="`echo -n "$DB_ENTRY" | cut -f 5 -d '|'`"
  DB_description="`echo -n "$DB_ENTRY" | cut -f 10 -d '|'`"
@@ -777,7 +777,7 @@ if [ "$DESKTOPFILE" != "" ];then
  fi
 fi
 
-echo "$DB_ENTRY" >> /root/.packages/user-installed-packages
+echo "$DB_ENTRY" >> /var/packages/user-installed-packages
 
 #120907 post-install hacks...
 /usr/local/petget/hacks-postinstall.sh $DLPKG_MAIN
@@ -794,7 +794,7 @@ echo "PACKAGE: $DLPKG_NAME CATEGORY: $CATEGORY" >> /tmp/petget-installed-pkgs-lo
 # (the entry script pkg_chooser.sh has sudo to switch to root)
 HOMEUSER="`grep '^tty1' /etc/inittab | tr -s ' ' | cut -f 3 -d ' '`" #root or uzer.
 if [ "$HOMEUSER" != "root" ];then
- grep -E '^/var|^/root|^/etc' /root/.packages/${DLPKG_NAME}.files |
+ grep -E '^/var|^/root|^/etc' /var/packages/${DLPKG_NAME}.files |
  while read FILELINE
  do
   busybox chown ${HOMEUSER}:users "${FILELINE}"
@@ -802,10 +802,10 @@ if [ "$HOMEUSER" != "root" ];then
 fi
 
 #120523 precise puppy needs this... (refer also rc.update and 3builddistro)
-if [ "`grep '/usr/share/glib-2.0/schemas' /root/.packages/${DLPKG_NAME}.files`" != "" ];then
+if [ "`grep '/usr/share/glib-2.0/schemas' /var/packages/${DLPKG_NAME}.files`" != "" ];then
  [ -e /usr/bin/glib-compile-schemas ] && /usr/bin/glib-compile-schemas /usr/share/glib-2.0/schemas
 fi
-if [ "`grep '/usr/lib/gio/modules' /root/.packages/${DLPKG_NAME}.files`" != "" ];then
+if [ "`grep '/usr/lib/gio/modules' /var/packages/${DLPKG_NAME}.files`" != "" ];then
  [ -e /usr/bin/gio-querymodules ] && /usr/bin/gio-querymodules /usr/lib/gio/modules
 fi
 

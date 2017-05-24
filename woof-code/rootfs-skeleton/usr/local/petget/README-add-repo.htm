@@ -16,8 +16,8 @@ These are web pages that introduce the package system in Puppy 5.x:<br>
 <big><a href="http://puppylinux.com/woof/ppm.htm">http://puppylinux.com/woof/ppm.htm</a></big> <br>
 <big><a href="http://puppylinux.com/woof/pkg-db-format.htm">http://puppylinux.com/woof/pkg-db-format.htm</a></big> <br>
 <br>
-There are two local files that you need to know about:<br><a href="file:///root/.packages/DISTRO_PET_REPOS">/root/.packages/DISTRO_PET_REPOS</a><br>
-<a href="file:///root/.packages/DISTRO_COMPAT_REPOS">/root/.packages/DISTRO_COMPAT_REPOS</a> <br>
+There are two local files that you need to know about:<br><a href="file:///var/packages/DISTRO_PET_REPOS">/var/packages/DISTRO_PET_REPOS</a><br>
+<a href="file:///var/packages/DISTRO_COMPAT_REPOS">/var/packages/DISTRO_COMPAT_REPOS</a> <br>
 <br>
 <h2>DISTRO_COMPAT_REPOS</h2>
 What you will see in this file are two variables named PKG_DOCS_DISTRO_COMPAT and REPOS_DISTRO_COMPAT.<br>
@@ -87,7 +87,7 @@ Note that the database filename on the site is the same as that after
 it is downloaded. This is because the PET database file on the site is
 supposed to already be in the "standardised format". Puppy from version
 2.0 up to and including version 4.x has kept package database
-information in a file /root/.packages/packages.txt, but this is
+information in a file /var/packages/packages.txt, but this is
 different from the new standardised format -- note though, the Woof
 build system has a script for converting old 'packages.txt' files into
 the new format.<br>

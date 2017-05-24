@@ -12,7 +12,7 @@ GCC=$(which gcc) # in case is a "full install"
 [ "$DEVX" = "" ] && [ "$GCC" = "" ] && exit 0
 
 . /etc/DISTRO_SPECS #has DISTRO_DB_SUBNAME
-. /root/.packages/DISTRO_PET_REPOS #has PET_REPOS, PKG_DOCS_PET_REPOS
+. /var/packages/DISTRO_PET_REPOS #has PET_REPOS, PKG_DOCS_PET_REPOS
 
 if [ $1 ];then
  CURRVER="$1"
@@ -47,7 +47,7 @@ spPTN1="|devx_service_pack.*\.pet|"
 
 #precaution, check highest already installed...
 INSTBIGGEST="$CURRVER"
-INSTALLEDVERS="$(grep "$spPTN1" /root/.packages/user-installed-packages /root/.packages/woof-installed-packages | cut -f 3 -d '|' | cut -f 3 -d '_' | cut -f 1 -d '-' | tr '\n' ' ')"
+INSTALLEDVERS="$(grep "$spPTN1" /var/packages/user-installed-packages /var/packages/woof-installed-packages | cut -f 3 -d '|' | cut -f 3 -d '_' | cut -f 1 -d '-' | tr '\n' ' ')"
 for ONEIN in $INSTALLEDVERS
 do
  if vercmp $ONEIN ge $INSTBIGGEST;then
@@ -68,7 +68,7 @@ do
    if vercmp $ENDVER gt $CURRVER;then
     #check whether already installed...
     spPTN2="_TO_${ENDVER}" #do not append further qualifier.
-    FNDINST="$(cat /root/.packages/user-installed-packages /root/.packages/woof-installed-packages | grep "$spPTN1" | grep "$spPTN2" | cut -f 1 -d '|')"
+    FNDINST="$(cat /var/packages/user-installed-packages /var/packages/woof-installed-packages | grep "$spPTN1" | grep "$spPTN2" | cut -f 1 -d '|')"
     [ "$FNDINST" != "" ] && continue
     CNT=`expr $CNT + 1`
     #find the size...

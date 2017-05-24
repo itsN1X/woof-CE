@@ -5,8 +5,8 @@ export OUTPUT_CHARSET=UTF-8
 
 [ "`whoami`" != "root" ] && exec sudo -A ${0} ${@} #110505
 
-if [ -f /root/.packages/download_path ]; then
- . /root/.packages/download_path
+if [ -f /var/packages/download_path ]; then
+ . /var/packages/download_path
 fi
 
 clean_up () {
@@ -56,8 +56,8 @@ report_results () {
   [ "$(echo $LINE)" = "" ] && continue
   if [ -f /tmp/download_pets_quietly -o -f /tmp/download_only_pet_quietly \
    -o -f /tmp/manual_pkg_download ];then
-   if [ -f /root/.packages/download_path ];then
-    . /root/.packages/download_path
+   if [ -f /var/packages/download_path ];then
+    . /var/packages/download_path
     DOWN_PATH="$DL_PATH"
    else
     DOWN_PATH=$HOME
@@ -359,14 +359,14 @@ install_package () {
  rm -f /tmp/overall_package_status_log
  echo 0 > /tmp/petget/install_status_percent
  echo "$(gettext "Calculating total required space...")" > /tmp/petget/install_status
- [ ! -f /root/.packages/skip_space_check ] && check_total_size
+ [ ! -f /var/packages/skip_space_check ] && check_total_size
  status_bar_func &
  while read LINE; do
    REPO=$(echo $LINE | cut -f 2 -d '|')
    echo "$REPO" > /tmp/petget/current-repo-triad
    TREE1=$(echo $LINE | cut -f 1 -d '|')
    if [ -f /tmp/install_quietly ];then
-    if [  "$(grep $TREE1 /root/.packages/user-installed-packages 2>/dev/null)" = "" \
+    if [  "$(grep $TREE1 /var/packages/user-installed-packages 2>/dev/null)" = "" \
      -a -f /tmp/install_pets_quietly ]; then
      if [ "$(cat /var/local/petget/nt_category 2>/dev/null)" = "true" ]; then
      /usr/local/petget/installpreview.sh

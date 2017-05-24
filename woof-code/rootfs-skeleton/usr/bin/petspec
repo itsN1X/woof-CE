@@ -18,8 +18,8 @@
 #ex: abiword-1.2.4|abiword|1.2.4|5|Document|999K|slackware/ab|abiword-1.2.4-5-i486.tgz|+aiksausus,+gtk2|a nice wordprocessor|slackware|12.2|official|
 
 . /etc/DISTRO_SPECS
-. /root/.packages/DISTRO_PKGS_SPECS
-. /root/.packages/DISTRO_PET_REPOS
+. /var/packages/DISTRO_PKGS_SPECS
+. /var/packages/DISTRO_PET_REPOS
 
 mkdir -p /var/local/petspec #100201
 
@@ -152,9 +152,9 @@ Note1: It is planned in the future to implement a minus character prefix (-) to 
 
 Note2: More than one version-condition is allowed, for example, to specify a range: <b>+alsa-lib&amp;ge2.3&amp;lt2.4</b>
 
-Note3: You can find out the names of inbuilt packages in file /root/.packages/woof-installed-packages. The names of other not-installed packages can be found in /root/.packages/Packages-* files.
+Note3: You can find out the names of inbuilt packages in file /var/packages/woof-installed-packages. The names of other not-installed packages can be found in /var/packages/Packages-* files.
 
-Note4: As Puppy can use packages from many different distros, sometimes the same application will have a different name, even something as simple as alsa-lib or alsa_lib. When analyzing dependencies, Puppy has a list of package-name aliases to handle this. See variable PKG_NAME_ALIASES in file PKGS_MANAGEMENT (also in /root/.packages/ in a running Puppy."</label>
+Note4: As Puppy can use packages from many different distros, sometimes the same application will have a different name, even something as simple as alsa-lib or alsa_lib. When analyzing dependencies, Puppy has a list of package-name aliases to handle this. See variable PKG_NAME_ALIASES in file PKGS_MANAGEMENT (also in /var/packages/ in a running Puppy."</label>
       <variable>VAR_DEPS</variable>
     </text>
     <button>

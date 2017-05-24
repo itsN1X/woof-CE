@@ -33,8 +33,8 @@ export OUTPUT_CHARSET=UTF-8
 #export LANG=C
 
 . /etc/DISTRO_SPECS #has DISTRO_BINARY_COMPAT, DISTRO_COMPAT_VERSION
-. /root/.packages/DISTRO_PKGS_SPECS
-. /root/.packages/PKGS_MANAGEMENT #has PKG_ALIASES_INSTALLED, PKG_NAME_ALIASES
+. /var/packages/DISTRO_PKGS_SPECS
+. /var/packages/PKGS_MANAGEMENT #has PKG_ALIASES_INSTALLED, PKG_NAME_ALIASES
 
 #130330 GUI filtering...
 DEFGUIFILTER="$(cat /var/local/petget/gui_filter 2>/dev/null)"
@@ -65,12 +65,12 @@ PKG_FIRST_CHAR='a-z0-9'
 X1PID=$!
 
 #which repo...
-FIRST_DB="`ls -1 /root/.packages/Packages-${DISTRO_BINARY_COMPAT}-${DISTRO_COMPAT_VERSION}* | head -n 1 | rev | cut -f 1 -d '/' | rev | cut -f 2-4 -d '-'`"
+FIRST_DB="`ls -1 /var/packages/Packages-${DISTRO_BINARY_COMPAT}-${DISTRO_COMPAT_VERSION}* | head -n 1 | rev | cut -f 1 -d '/' | rev | cut -f 2-4 -d '-'`"
 fltrREPO_TRIAD="$FIRST_DB" #ex: slackware-12.2-official
 #or, a selection was made in the main gui (pkg_chooser.sh)...
 [ -f /tmp/petget/current-repo-triad ] && fltrREPO_TRIAD="`cat /tmp/petget/current-repo-triad`"
 
-REPO_FILE="`find /root/.packages -type f -name "Packages-${fltrREPO_TRIAD}*" | head -n 1`"
+REPO_FILE="`find /var/packages -type f -name "Packages-${fltrREPO_TRIAD}*" | head -n 1`"
 
 #choose a category in the repo...
 if [ $1 ];then #$1 exs: Document, Internet, Graphic, Setup, Desktop
@@ -113,7 +113,7 @@ fi
 #w480 extract names of packages that are already installed...
 shortPATTERN="`cut -f 2 -d '|' /tmp/petget_fltrd_repo_${PKG_FIRST_CHAR}_${fltrCATEGORY}_${xDEFGUIFILTER}_Packages-${fltrREPO_TRIAD} | sed -e 's%^%|%' -e 's%$%|%'`"
 echo "$shortPATTERN" > /tmp/petget_shortlist_patterns
-INSTALLED_CHAR_CAT="`cat /root/.packages/layers-installed-packages /root/.packages/user-installed-packages | grep --file=/tmp/petget_shortlist_patterns`" #130511
+INSTALLED_CHAR_CAT="`cat /var/packages/layers-installed-packages /var/packages/user-installed-packages | grep --file=/tmp/petget_shortlist_patterns`" #130511
 #make up a list of filter patterns, so will be able to filter pkg db...
 if [ "$INSTALLED_CHAR_CAT" ];then #100711
  INSTALLED_PATTERNS="`echo "$INSTALLED_CHAR_CAT" | cut -f 2 -d '|' | sed -e 's%^%|%' -e 's%$%|%'`"
@@ -140,7 +140,7 @@ if [ "$xDBC" != "puppy" ];then #not PET pkgs.
  for ONEPTBCK in $PKG_PET_THEN_BLACKLIST_COMPAT_KIDS
  do
   pONEPTBCK='|'"$ONEPTBCK"'|' #ex: |ffmpeg|
-  fONEPTBCK="`grep "$pONEPTBCK" /root/.packages/layers-installed-packages /root/.packages/user-installed-packages | grep '\.pet|'`" #130511
+  fONEPTBCK="`grep "$pONEPTBCK" /var/packages/layers-installed-packages /var/packages/user-installed-packages | grep '\.pet|'`" #130511
   #if it is a PET, then filter-out any compat-distro pkgs that depend on it...
   [ "fONEPTBCK" != "" ] && echo '+'"$ONEPTBCK"'[,|]' >> /tmp/petget_installed_patterns
  done

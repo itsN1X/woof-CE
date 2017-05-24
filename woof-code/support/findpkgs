@@ -1,7 +1,7 @@
 #!/bin/bash
 #Copyright Barry Kauler, aug 2011, bkhome.org
 #110817 find all packages to be used in a Puppy build, pet and compat.
-#110821 must also work with working-dir set to /root/.packages
+#110821 must also work with working-dir set to /var/packages
 #110908 fix o/p file for pkgs which genericname not found.
 #111014 tweak support for 3.x kernel.
 #111127 no longer check if host has 'printcols', 'vercmp', it is done in 'merge2out' script.
@@ -44,7 +44,7 @@ if [ $1 ] ; then #process a specific pkg only (debug)
 fi
 
 CURDIR="`pwd`"
-if [ "$CURDIR" = "/root/.packages" ];then #110821
+if [ "$CURDIR" = "/var/packages" ];then #110821
 	. /etc/DISTRO_SPECS #has DISTRO_BINARY_COMPAT, DISTRO_COMPAT_VERSION
 	[ ! "$DISTRO_DB_SUBNAME" ] && DISTRO_DB_SUBNAME="$DISTRO_COMPAT_VERSION" #121102 fallback if DISTRO_DB_SUBNAME not defined in file DISTRO_SPECS.
 	DS_DATE="`md5sum /etc/DISTRO_SPECS | cut -f 1 -d ' '`"

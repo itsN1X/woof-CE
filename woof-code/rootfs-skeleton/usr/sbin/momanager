@@ -156,11 +156,11 @@ do
  PATHxAGTS="`dirname "$xAGTS"`"
  xxPTN="^${PATHxAGTS}$"
  zPTN="^${xAGTS}$"
- aPKGNAME="`grep "$xPTN" /root/.packages/builtin_files/* | cut -f 1 -d ':' | rev | cut -f 1 -d '/' | rev`" #test if pkg used in Woof build.
+ aPKGNAME="`grep "$xPTN" /var/packages/builtin_files/* | cut -f 1 -d ':' | rev | cut -f 1 -d '/' | rev`" #test if pkg used in Woof build.
  if [ "$aPKGNAME" ];then #confirm full path.
   for AAA in $aPKGNAME
   do
-   CONFIRM="`cat /root/.packages/builtin_files/${AAA} | sed -e 's%^ %/%' | tr -d '\n' | grep "$xAGTS"`"
+   CONFIRM="`cat /var/packages/builtin_files/${AAA} | sed -e 's%^ %/%' | tr -d '\n' | grep "$xAGTS"`"
    if [ "$CONFIRM" ];then
     aPKGNAME="$AAA"
     break
@@ -168,7 +168,7 @@ do
   done
   [ ! "$CONFIRM" ] && aPKGNAME=""
  fi
- [ ! "$aPKGNAME" ] && aPKGNAME="`grep "$zPTN" /root/.packages/*.files 2>/dev/null | head -n 1 | cut -f 1 -d ':' | rev | cut -f 1 -d '/' | rev | sed -e 's%\.files$%%'`" #test if user-installed pkg. 120308
+ [ ! "$aPKGNAME" ] && aPKGNAME="`grep "$zPTN" /var/packages/*.files 2>/dev/null | head -n 1 | cut -f 1 -d ':' | rev | cut -f 1 -d '/' | rev | sed -e 's%\.files$%%'`" #test if user-installed pkg. 120308
  #...return nothing if in Woof
  [ ! "$aPKGNAME" ] && [ -f "${PATHPREFIX}${xAGTS}" ] && aPKGNAME="WOOF" #file is in Woof.
  [ ! "$aPKGNAME" ] && aPKGNAME="UNKNOWN"
@@ -218,8 +218,8 @@ do
  #find out what package it is from...
  xPTN=" ${ADESKNAME}$"
  zPTN="^${ADESKTOP}$"
- aPKGNAME="`grep "$xPTN" /root/.packages/builtin_files/* | head -n 1 | cut -f 1 -d ':' | rev | cut -f 1 -d '/' | rev`" #test if pkg used in Woof build.
- [ ! "$aPKGNAME" ] && aPKGNAME="`grep "$zPTN" /root/.packages/*.files 2>/dev/null | head -n 1 | cut -f 1 -d ':' | rev | cut -f 1 -d '/' | rev | sed -e 's%\.files$%%'`" #test if user-installed pkg. 120308
+ aPKGNAME="`grep "$xPTN" /var/packages/builtin_files/* | head -n 1 | cut -f 1 -d ':' | rev | cut -f 1 -d '/' | rev`" #test if pkg used in Woof build.
+ [ ! "$aPKGNAME" ] && aPKGNAME="`grep "$zPTN" /var/packages/*.files 2>/dev/null | head -n 1 | cut -f 1 -d ':' | rev | cut -f 1 -d '/' | rev | sed -e 's%\.files$%%'`" #test if user-installed pkg. 120308
  #...return nothing if in Woof
  [ ! "$aPKGNAME" ] && [ -f "${PATHPREFIX}${ADESKTOP}" ] && aPKGNAME="WOOF" #file is in Woof.
  [ ! "$aPKGNAME" ] && aPKGNAME="UNKNOWN"
@@ -327,11 +327,11 @@ do
  PATHAXMLFILE="`dirname "$AXMLFILE"`"
  xxPTN="^${PATHAXMLFILE}$"
  zPTN="^${AXMLFILE}$"
- aPKGNAME="`grep "$xPTN" /root/.packages/builtin_files/* | cut -f 1 -d ':' | rev | cut -f 1 -d '/' | rev`" #test if pkg used in Woof build.
+ aPKGNAME="`grep "$xPTN" /var/packages/builtin_files/* | cut -f 1 -d ':' | rev | cut -f 1 -d '/' | rev`" #test if pkg used in Woof build.
  if [ "$aPKGNAME" ];then #confirm full path.
   for AAA in $aPKGNAME
   do
-   CONFIRM="`cat /root/.packages/builtin_files/${AAA} | sed -e 's%^ %/%' | tr -d '\n' | grep "$AXMLFILE"`"
+   CONFIRM="`cat /var/packages/builtin_files/${AAA} | sed -e 's%^ %/%' | tr -d '\n' | grep "$AXMLFILE"`"
    if [ "$CONFIRM" ];then
     aPKGNAME="$AAA"
     break
@@ -339,7 +339,7 @@ do
   done
   [ ! "$CONFIRM" ] && aPKGNAME=""
  fi
- [ ! "$aPKGNAME" ] && aPKGNAME="`grep "$zPTN" /root/.packages/*.files 2>/dev/null | head -n 1 | cut -f 1 -d ':' | rev | cut -f 1 -d '/' | rev | sed -e 's%\.files$%%'`" #test if user-installed pkg. 120308
+ [ ! "$aPKGNAME" ] && aPKGNAME="`grep "$zPTN" /var/packages/*.files 2>/dev/null | head -n 1 | cut -f 1 -d ':' | rev | cut -f 1 -d '/' | rev | sed -e 's%\.files$%%'`" #test if user-installed pkg. 120308
  #...return nothing if in Woof
  [ ! "$aPKGNAME" ] && [ -f "${PATHPREFIX}${AXMLFILE}" ] && aPKGNAME="WOOF" #file is in Woof.
  [ ! "$aPKGNAME" ] && aPKGNAME="UNKNOWN"
@@ -482,11 +482,11 @@ do
     PATHBINEXEC="`dirname "$BINEXEC"`"
     xxPTN="^${PATHBINEXEC}$"
     zPTN="^${BINEXEC}$"
-    aPKGNAME="`grep "$xPTN" /root/.packages/builtin_files/* | cut -f 1 -d ':' | rev | cut -f 1 -d '/' | rev`" #test if pkg used in Woof build.
+    aPKGNAME="`grep "$xPTN" /var/packages/builtin_files/* | cut -f 1 -d ':' | rev | cut -f 1 -d '/' | rev`" #test if pkg used in Woof build.
     if [ "$aPKGNAME" ];then #confirm full path.
      for AAA in $aPKGNAME
      do
-      CONFIRM="`cat /root/.packages/builtin_files/${AAA} | sed -e 's%^ %/%' | tr -d '\n' | grep "$BINEXEC"`"
+      CONFIRM="`cat /var/packages/builtin_files/${AAA} | sed -e 's%^ %/%' | tr -d '\n' | grep "$BINEXEC"`"
       if [ "$CONFIRM" ];then
        aPKGNAME="$AAA"
        break
@@ -494,7 +494,7 @@ do
      done
      [ ! "$CONFIRM" ] && aPKGNAME=""
     fi
-    [ ! "$aPKGNAME" ] && aPKGNAME="`grep "$zPTN" /root/.packages/*.files 2>/dev/null | head -n 1 | cut -f 1 -d ':' | rev | cut -f 1 -d '/' | rev | sed -e 's%\.files$%%'`" #test if user-installed pkg. 120308
+    [ ! "$aPKGNAME" ] && aPKGNAME="`grep "$zPTN" /var/packages/*.files 2>/dev/null | head -n 1 | cut -f 1 -d ':' | rev | cut -f 1 -d '/' | rev | sed -e 's%\.files$%%'`" #test if user-installed pkg. 120308
     #...return nothing if in Woof
     [ ! "$aPKGNAME" ] && [ -f "${PATHPREFIX}${BINEXEC}" ] && aPKGNAME="WOOF" #file is in Woof.
     [ ! "$aPKGNAME" ] && aPKGNAME="UNKNOWN"

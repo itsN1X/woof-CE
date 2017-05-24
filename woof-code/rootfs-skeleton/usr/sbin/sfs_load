@@ -87,7 +87,7 @@ PUPSAVECONFIG=$(which pupsaveconfig)
 PUPSAVECONF=/etc/rc.d/pupsave.conf
 SHUTDOWNCONF=/tmp/shoudownconfig_results
 DISTRO_SPECS=/etc/DISTRO_SPECS
-PKGDIR="/root/.packages"
+PKGDIR="/var/packages"
 INSTALLEDLIST="$PKGDIR/user-installed-packages"
 WOOFLIST="$PKGDIR/woof-installed-packages"
 SFSCONVERT="/usr/local/sfsconvert/sfsconvert"
@@ -634,7 +634,7 @@ queued_sfs_list() {
 
 INSTALLEDLIST=""
 installed_sfs_lst() {
-  #PKGDIR="/root/.packages"
+  #PKGDIR="/var/packages"
   #INSTALLEDLIST="$PKGDIR/user-installed-packages"
   [ "$1" != "" ] && QUERY=$(basename "$1" .sfs) || QUERY=""
   [ -f "$INSTALLEDLIST" ] || return 1

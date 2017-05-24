@@ -17,7 +17,7 @@ fi
 
 if [ -s /tmp/gxineerror.log ];then
  if [ ! "`grep 'Error loading library' /tmp/gxineerror.log`" = "" ];then
-  if [ "`cat /root/.packages/packages.txt /root/.packages/livepackages.txt | grep '"mplayer_codecs_full' | grep '" on "'`" = "" ];then #'Geany
+  if [ "`cat /var/packages/packages.txt /var/packages/livepackages.txt | grep '"mplayer_codecs_full' | grep '" on "'`" = "" ];then #'Geany
    xmessage -center -bg '#FF8080' -title "Gxine ERROR" "Gxine failed to load a codec file required to play the media file.
 There is a PET package with extra codecs, called 'mplayer_codecs_full'.
 Please run the PETget package manager and install it -- click the

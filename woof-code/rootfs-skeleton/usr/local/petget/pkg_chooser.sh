@@ -27,23 +27,23 @@ HELPFILE="/usr/local/petget/help.htm"
 # Set the skip-space flag
 if [ "$(cat /var/local/petget/sc_category 2>/dev/null)" = "true" ] && \
 	[ "$(cat /tmp/pup_event_sizefreem | head -n 1 )" -gt 4000 ]; then
-	touch /root/.packages/skip_space_check
+	touch /var/packages/skip_space_check
 else
-	rm -f /root/.packages/skip_space_check
+	rm -f /var/packages/skip_space_check
 	echo false > /var/local/petget/sc_category
 fi
 
 # Make sure the download folder exists and is writable
-if [ -f /root/.packages/download_path ]; then
- . /root/.packages/download_path
- [ ! -d "$DL_PATH" -o ! -w "$DL_PATH" ] && rm -f /root/.packages/download_path
+if [ -f /var/packages/download_path ]; then
+ . /var/packages/download_path
+ [ ! -d "$DL_PATH" -o ! -w "$DL_PATH" ] && rm -f /var/packages/download_path
 fi
 
 options_status () {
-	[ -f /root/.packages/skip_space_check ] && \
+	[ -f /var/packages/skip_space_check ] && \
 	 MSG_SPACE="$(gettext 'Do NOT check available space.')
 	 $(gettext '')"
-	[ -f /root/.packages/download_path ] && [ "$DL_PATH" != "/root" ] && \
+	[ -f /var/packages/download_path ] && [ "$DL_PATH" != "/root" ] && \
 	 MSG_DPATH="$(gettext 'Download packages in ')${DL_PATH}.
 	 $(gettext '')"
 	[ "$(cat /var/local/petget/install_mode 2>/dev/null)" = "true" ] && \
@@ -99,8 +99,8 @@ echo "" > /tmp/petget/install_status
 touch /tmp/install_pets_quietly
 
 . /etc/DISTRO_SPECS #has DISTRO_BINARY_COMPAT, DISTRO_COMPAT_VERSION
-. /root/.packages/DISTRO_PKGS_SPECS
-. /root/.packages/PKGS_MANAGEMENT #has PKG_REPOS_ENABLED, PKG_NAME_ALIASES
+. /var/packages/DISTRO_PKGS_SPECS
+. /var/packages/PKGS_MANAGEMENT #has PKG_REPOS_ENABLED, PKG_NAME_ALIASES
 
 
 
@@ -119,7 +119,7 @@ add_item (){
 	[ ! -f /tmp/install_pets_quietly -a ! -f  /tmp/download_only_pet_quietly \
 	 -a ! -f /tmp/download_pets_quietly -a ! -f /tmp/install_classic ] \
 	 && touch /tmp/install_pets_quietly
-	if [ "$(grep $TREE1 /root/.packages/user-installed-packages)" != "" -a \
+	if [ "$(grep $TREE1 /var/packages/user-installed-packages)" != "" -a \
 	 -f /tmp/install_pets_quietly ]; then
 		. /usr/lib/gtkdialog/box_yesno "$(gettext 'Package is already installed')" "$(gettext 'This package is already installed! ')" "$(gettext 'If you want to re-install it, first remove it and then install it again. To download only or use the step-by-step classic mode, select No and then change the Auto Install to another option.')" "$(gettext 'To Abort the process now select Yes.')"
 		if [ "$EXIT" = "yes" ]; then
@@ -129,7 +129,7 @@ add_item (){
 		fi
 	fi
 	if [ "$TREE1" ] && [ ! "$(grep -F $TREE1 /tmp/pkgs_to_install)" ]; then
-		if [ ! -f /root/.packages/skip_space_check ]; then
+		if [ ! -f /var/packages/skip_space_check ]; then
 			echo 0 > /tmp/petget/install_status_percent
 			echo "$(gettext "Calculating...")" > /tmp/petget/install_status
 		fi
@@ -150,7 +150,7 @@ add_item2(){
 
 remove_item (){
 	if [ "$TREE_INSTALL" ]; then
-		if [ ! -f /root/.packages/skip_space_check ]; then
+		if [ ! -f /var/packages/skip_space_check ]; then
 			echo 0 > /tmp/petget/install_status_percent
 			echo "$(gettext "Calculating...")" > /tmp/petget/install_status
 		fi
@@ -230,7 +230,7 @@ export -f add_item add_item2 remove_item remove_item2 change_mode installed_warn
                ##################################################
 
 
-touch /root/.packages/user-installed-packages #120603 missing at first boot.
+touch /var/packages/user-installed-packages #120603 missing at first boot.
 #101129 choose to display EXE, DEV, DOC, NLS pkgs... note, this code-block is also in findnames.sh and filterpkgs.sh...
 DEF_CHK_EXE='true'
 DEF_CHK_DEV='false'
@@ -248,17 +248,17 @@ DEF_CHK_NLS='false'
 #130511 need to include devx-only-installed-packages, if loaded...
 #note, this code block also in check_deps.sh.
 if which gcc;then
- cp -f /root/.packages/woof-installed-packages /tmp/ppm-layers-installed-packages
- cat /root/.packages/devx-only-installed-packages >> /tmp/ppm-layers-installed-packages
- sort -u /tmp/ppm-layers-installed-packages > /root/.packages/layers-installed-packages
+ cp -f /var/packages/woof-installed-packages /tmp/ppm-layers-installed-packages
+ cat /var/packages/devx-only-installed-packages >> /tmp/ppm-layers-installed-packages
+ sort -u /tmp/ppm-layers-installed-packages > /var/packages/layers-installed-packages
 else
- cp -f /root/.packages/woof-installed-packages /root/.packages/layers-installed-packages
+ cp -f /var/packages/woof-installed-packages /var/packages/layers-installed-packages
 fi
 #120224 handle translated help.htm
 
 #100711 moved from findmissingpkgs.sh... 130511 rename woof-installed-packages to layers-installed-packages...
 if [ ! -f /tmp/petget_installed_patterns_system ];then
- INSTALLED_PATTERNS_SYS="`cat /root/.packages/layers-installed-packages | cut -f 2 -d '|' | sed -e 's%^%|%' -e 's%$%|%' -e 's%\\-%\\\\-%g'`"
+ INSTALLED_PATTERNS_SYS="`cat /var/packages/layers-installed-packages | cut -f 2 -d '|' | sed -e 's%^%|%' -e 's%$%|%' -e 's%\\-%\\\\-%g'`"
  echo "$INSTALLED_PATTERNS_SYS" > /tmp/petget_installed_patterns_system
  #PKGS_SPECS_TABLE also has system-installed names, some of them are generic combinations of pkgs...
  . /etc/rc.d/BOOTCONFIG
@@ -275,10 +275,10 @@ if [ ! -f /tmp/petget_installed_patterns_system ];then
  case $DISTRO_BINARY_COMPAT in
   ubuntu|debian|devuan|raspbian)
    #for 'cups' pet, we want to create a pattern '/cups|' so can locate all debs with that DB_path entry '.../cups'
-    INSTALLED_PTNS_PET="$(grep '\.pet|' /root/.packages/layers-installed-packages | cut -f 2 -d '|' | sed -e 's%^%/%' -e 's%$%|%' -e 's%\-%\\-%g')"
+    INSTALLED_PTNS_PET="$(grep '\.pet|' /var/packages/layers-installed-packages | cut -f 2 -d '|' | sed -e 's%^%/%' -e 's%$%|%' -e 's%\-%\\-%g')"
    if [ "$INSTALLED_PTNS_PET" != "/|" ];then
     echo "$INSTALLED_PTNS_PET" > /tmp/petget/installed_ptns_pet
-    INSTALLED_ALT_NAMES="$(grep --no-filename -f /tmp/petget/installed_ptns_pet /root/.packages/Packages-${DISTRO_BINARY_COMPAT}-${DISTRO_COMPAT_VERSION}-* | cut -f 2 -d '|')"
+    INSTALLED_ALT_NAMES="$(grep --no-filename -f /tmp/petget/installed_ptns_pet /var/packages/Packages-${DISTRO_BINARY_COMPAT}-${DISTRO_COMPAT_VERSION}-* | cut -f 2 -d '|')"
     if [ "$INSTALLED_ALT_NAMES" ];then
      INSTALLED_ALT_PTNS="$(echo "$INSTALLED_ALT_NAMES" | sed -e 's%^%|%' -e 's%$%|%' -e 's%\-%\\-%g')"
      echo "$INSTALLED_ALT_PTNS" >> /tmp/petget_installed_patterns_system
@@ -291,22 +291,22 @@ if [ ! -f /tmp/petget_installed_patterns_system ];then
 fi
 #100711 this code repeated in findmissingpkgs.sh...
 cp -f /tmp/petget_installed_patterns_system /tmp/petget_installed_patterns_all
-if [ -s /root/.packages/user-installed-packages ];then
- INSTALLED_PATTERNS_USER="`cat /root/.packages/user-installed-packages | cut -f 2 -d '|' | sed -e 's%^%|%' -e 's%$%|%' -e 's%\\-%\\\\-%g'`"
+if [ -s /var/packages/user-installed-packages ];then
+ INSTALLED_PATTERNS_USER="`cat /var/packages/user-installed-packages | cut -f 2 -d '|' | sed -e 's%^%|%' -e 's%$%|%' -e 's%\\-%\\\\-%g'`"
  echo "$INSTALLED_PATTERNS_USER" >> /tmp/petget_installed_patterns_all
  #120822 find alt names in compat-distro pkgs, for user-installed pets...
  case $DISTRO_BINARY_COMPAT in
   ubuntu|debian|devuan|raspbian)
    #120904 bugfix, was very slow...
-   MODIF1=`stat --format=%Y /root/.packages/user-installed-packages` #seconds since epoch.
+   MODIF1=`stat --format=%Y /var/packages/user-installed-packages` #seconds since epoch.
    MODIF2=0
    [ -f /var/local/petget/installed_alt_ptns_pet_user ] && MODIF2=`stat --format=%Y /var/local/petget/installed_alt_ptns_pet_user`
    if [ $MODIF1 -gt $MODIF2 ];then
-    INSTALLED_PTNS_PET="$(grep '\.pet|' /root/.packages/user-installed-packages | cut -f 2 -d '|')"
+    INSTALLED_PTNS_PET="$(grep '\.pet|' /var/packages/user-installed-packages | cut -f 2 -d '|')"
     if [ "$INSTALLED_PTNS_PET" != "" ];then
      xINSTALLED_PTNS_PET="$(echo "$INSTALLED_PTNS_PET" | sed -e 's%^%/%' -e 's%$%|%' -e 's%\-%\\-%g')"
      echo "$xINSTALLED_PTNS_PET" > /tmp/petget/fmp_xipp1
-     INSTALLED_ALT_NAMES="$(grep --no-filename -f /tmp/petget/fmp_xipp1 /root/.packages/Packages-${DISTRO_BINARY_COMPAT}-${DISTRO_COMPAT_VERSION}-* | cut -f 2 -d '|')"
+     INSTALLED_ALT_NAMES="$(grep --no-filename -f /tmp/petget/fmp_xipp1 /var/packages/Packages-${DISTRO_BINARY_COMPAT}-${DISTRO_COMPAT_VERSION}-* | cut -f 2 -d '|')"
      if [ "$INSTALLED_ALT_NAMES" ];then
       INSTALLED_ALT_PTNS="$(echo "$INSTALLED_ALT_NAMES" | sed -e 's%^%|%' -e 's%$%|%' -e 's%\-%\\-%g')"
       echo "$INSTALLED_ALT_PTNS" > /var/local/petget/installed_alt_ptns_pet_user
@@ -361,7 +361,7 @@ aPRE="`echo -n "$PKG_REPOS_ENABLED" | tr ' ' '\n' | grep -v '\-puppy\-' | tr -s 
 bPRE="`echo -n "$PKG_REPOS_ENABLED" | tr ' ' '\n' | grep '\-puppy\-' | tr -s '\n' | tr '\n' ' '`"
 for ONEREPO in $aPRE $bPRE #ex: ' Packages-puppy-precise-official Packages-puppy-noarch-official Packages-ubuntu-precise-main Packages-ubuntu-precise-multiverse '
 do
- [ ! -f /root/.packages/$ONEREPO ] && continue
+ [ ! -f /var/packages/$ONEREPO ] && continue
  REPOCUT="`echo -n "$ONEREPO" | cut -f 2-4 -d '-'`"
  [ "$REPOS_RADIO" = "" ] && FIRST_DB="$REPOCUT"
  xREPOCUT="$(echo -n "$REPOCUT" | sed -e 's%\-official$%%')" #120905 window too wide.
