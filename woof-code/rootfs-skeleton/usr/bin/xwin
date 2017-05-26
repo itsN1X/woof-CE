@@ -1,7 +1,7 @@
 #!/bin/sh
 #(c) Copyright Barry Kauler 2003,2004,2005,2006,2007 www.puppylinux.com
 #2007 Lesser GPL licence v2 (http://www.fsf.org/licensing/licenses/lgpl.html)
-# called by /root/.profile
+# called by $HOME/.profile
 # moved sync code for console/xorg kbd layout from xwin to /usr/sbin/input-wizard.
 #
 # $DISTRO_XORG_AUTO         : see /etc/DISTRO_SPECS.
@@ -26,7 +26,7 @@ if [ "$1" = "-default" ] ; then
 	shift
 fi
 
-# Ensure current directory is root, in case changed at command prompt,
+# Ensure current directory is $HOME, in case changed at command prompt,
 # so rox icon and menu item open only at home directory. rerwin
 cd ~/
 
@@ -43,7 +43,7 @@ fi
 
 # enables to start a specific w.m. from commandline...
 # this can also be an app that stars a desktop environment..
-[ $1 ] && echo -n "$1" > /etc/windowmanager # /root/.xinitrc uses this file.
+[ $1 ] && echo -n "$1" > /etc/windowmanager # $HOME/.xinitrc uses this file.
 # 2nd param: app to be used as the desktop (rox,pcmanfm,etc) ... specially for jwm..
 if [ $2 ] ; then
 	echo -n "$2" > /etc/desktop_app
@@ -106,7 +106,7 @@ elif [ -f /etc/X11/xorg.conf ];then
   fi
 else
   #* /etc/X11/xorg.conf does not exist *
-  rm -f /root/.XLOADED 2> /dev/null #not necessary, precaution.
+  rm -f /var/shared/.XLOADED 2> /dev/null #not necessary, precaution.
   if [ "$DISTRO_XORG_AUTO" != "yes" -o -f /var/local/xwin_no_xorg_auto_flag ] ; then
     xorgwizard-cli # 1st dialog offers to use Xorg vesa...
   fi
@@ -114,8 +114,8 @@ else
 fi
 
 # J_Reys idea (see note further down)...
-if [ -f /root/.XLOADED ];then
- if [ "`cat /root/.XLOADED`" = "true" ];then
+if [ -f /var/shared/.XLOADED ];then
+ if [ "`cat /var/shared/.XLOADED`" = "true" ];then
   #last time X ran, PC hung and had to be rebooted...
   dialog --timeout 30 --title "$(gettext 'Warning')" --yes-label "$(gettext 'Ignore')" --no-label "$(gettext 'Commandline')" --yesno "$(gettext 'X seems to have exited uncleanly the last time you ran Puppy.  This is usually because of an improper shutdown (such as a power failure), but may be because something is broken.')
 
@@ -125,7 +125,7 @@ $(gettext 'If there is a problem, such as X not working, choose <Commandline> to
 
 $(gettext 'If undecided, wait 30 seconds for normal startup of X...')" 0 0
   if [ ! $? = 1 ]; then
-    rm /root/.XLOADED
+    rm /var/shared/.XLOADED
   else
     echo -en "\\033[1;31m" #34=blue, 33=yellow, 32=green, 31=red, 35=purple, 36=aquablue, 38=black.
     echo '
@@ -134,7 +134,7 @@ $(gettext 'If undecided, wait 30 seconds for normal startup of X...')" 0 0
 '$(gettext 'Video Wizard, type "xorgwizard", and after configuring /etc/X11/xorg.conf')'
 '$(gettext '(hopefully correctly this time!) type "xwin" to start X.')''
     echo -e "\\033[0;39m"
-    rm -f /root/.XLOADED #otherwise cannot start X.
+    rm -f /var/shared/.XLOADED #otherwise cannot start X.
     exit
   fi
  fi
@@ -155,12 +155,12 @@ fi
 #-- finally, start X... --
 # J_Rey had a good idea, flag XLOADED... and set to false on exit.
 # but if PC hangs, XLOADED will still be true, so will know it is broken.
-echo -n "true" > /root/.XLOADED
-echo "$(gettext 'Starting X, specs in /etc/X11/xorg.conf, startup apps /root/.xinitrc...')"
+echo -n "true" > /var/shared/.XLOADED
+echo "$(gettext 'Starting X, specs in /etc/X11/xorg.conf, startup apps $HOME/.xinitrc...')"
 #-----------------------------------------------------------------------
-/usr/bin/xinit /root/.xinitrc -- -br -nolisten tcp > /tmp/xerrs.log 2>&1
+/usr/bin/xinit $HOME/.xinitrc -- -br -nolisten tcp > /tmp/xerrs.log 2>&1
 #-----------------------------------------------------------------------
-echo -n "false" > /root/.XLOADED #see note above.
+echo -n "false" > /var/shared/.XLOADED #see note above.
 sleep 0.5
 # ...if PC hung, run xorgwizard at next bootup (see further up).
 
