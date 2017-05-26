@@ -148,6 +148,10 @@ firmware_tarball_func() {
 # mount devtmpfs early
 mount -t devtmpfs devtmpfs /dev 2>/dev/null
 
+# shared stuff with r+w access for everyone
+mkdir -p /var/shared
+chmod 777 /var/shared
+
 #if have just done a switch_root, output a 'done' message...
 [ -d /initrd ] && status_func 0
 
