@@ -5,7 +5,7 @@
 #named to show its final destination. For example, the template for JWM:
 # _root_.jwmrc
 #...the '_' will be converted to a '/', so the generated JWM config file is:
-# /root/.jwmrc
+# $HOME/.jwmrc
 # 5jan2008: fbpanel,lxpanel support developed by plinej.
 #100404 BK added 'variconlinks' for my fbpanel pkg.
 #100427 when called via /etc/rc.d/rc.update, HOME is '/' (needed by some of the menu generating apps).
@@ -15,10 +15,7 @@
 #120216 sss translation file now uses simple sed expressions.
 #120524 bug fix.
 
-#100427
-[ ! "$HOME" ] && HOME='/root'
-[ "$HOME" = "/" ] && HOME='/root'
-export HOME
+. /bin/gethome export
 
 [ -f $HOME/.jwm/menuheights ] && . $HOME/.jwm/menuheights
 
@@ -37,14 +34,15 @@ TEMPLATES="`ls -1 /etc/xdg/templates | tr '\n' ' '`"
 for ONETPL in $TEMPLATES #ex: _root_.jwmrc
 do
  [ "$ONETPL" = "README.txt" ] && continue
- ONEDEST="`echo -n "$ONETPL" | sed -e 's/_/\//g'`"
+ ONEDEST="`echo -n "$ONETPL" | sed -e 's/_/\//g' -e "s%/root%${HOME}%"`"
  ONESRC="/etc/xdg/templates/$ONETPL"
  echo "Generating $ONEDEST..."
  
  [ -f $ONEDEST ] && mv -f $ONEDEST ${ONEDEST}-previous
 
  [ "$MENHEIGHT" ] && MH=$MENHEIGHT || MH=24
- sed -i "s|MENHEIGHT|$MH|" ${ONESRC}
+ sed "s|MENHEIGHT|$MH|" ${ONESRC} > /tmp/fixmenustmp$$
+ ONESRC=/tmp/fixmenustmp$$
 
  (
  while read ONELINE
@@ -56,6 +54,7 @@ do
    esac
    echo "$ONELINE" #>> ${ONEDEST}
  done < ${ONESRC}
+ rm -f /tmp/fixmenustmp$$
  ) > ${ONEDEST}
 
  #120207 translate some strings... 120216...
