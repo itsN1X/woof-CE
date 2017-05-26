@@ -167,10 +167,10 @@ Press ENTER key to close drive tray" 0 0 >$DEVCONSOLE
     break #v3.01
    else
     waittrayclosed_func $CDR #v2.16
-    TSIZE="`$MKISOFS -print-size -D -R -C $SECT -M $CDR -quiet -new-dir-mode 0755 -graft-points -x ${pup_rw}/tmp $REMSFS -x ${pup_rw}/dev -x ${pup_rw}/proc -x ${pup_rw}/sys -x ${pup_rw}/var -x ${pup_rw}/initrd -x ${pup_rw}/mnt -x ${pup_rw}/root/.XLOADED ${MYDATE}=${pup_rw}`" #120823
+    TSIZE="`$MKISOFS -print-size -D -R -C $SECT -M $CDR -quiet -new-dir-mode 0755 -graft-points -x ${pup_rw}/tmp $REMSFS -x ${pup_rw}/dev -x ${pup_rw}/proc -x ${pup_rw}/sys -x ${pup_rw}/var -x ${pup_rw}/initrd -x ${pup_rw}/mnt -x ${pup_rw}/root/.XLOADED -x ${pup_rw}/var/shared/.XLOADED ${MYDATE}=${pup_rw}`" #120823
     #-J Joliet extension disabled, sometimes causes failure...
     waittrayclosed_func $CDR #v2.16 v3.01 now HDRCDR...
-    $MKISOFS -D -R -C $SECT -M $CDR -quiet -new-dir-mode 0755 -graft-points -x ${pup_rw}/tmp $REMSFS -x ${pup_rw}/dev -x ${pup_rw}/proc -x ${pup_rw}/sys -x ${pup_rw}/var -x ${pup_rw}/initrd -x ${pup_rw}/mnt -x ${pup_rw}/root/.XLOADED ${MYDATE}=${pup_rw} | \
+    $MKISOFS -D -R -C $SECT -M $CDR -quiet -new-dir-mode 0755 -graft-points -x ${pup_rw}/tmp $REMSFS -x ${pup_rw}/dev -x ${pup_rw}/proc -x ${pup_rw}/sys -x ${pup_rw}/var -x ${pup_rw}/initrd -x ${pup_rw}/mnt -x ${pup_rw}/root/.XLOADED -x ${pup_rw}/var/shared/.XLOADED ${MYDATE}=${pup_rw} | \
       $CDRECORD -multi -data -tao -eject -v speed=4 gracetime=2 padsize=300k tsize=${TSIZE}s dev=${HDRCDR} - #120823
     [ $? -eq 0 ] && break
    fi

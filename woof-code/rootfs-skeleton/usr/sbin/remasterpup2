@@ -556,6 +556,7 @@ rm -f /tmp/var/packages/*.files #120607
 rm -f /tmp/var/packages/*.remove #120607
 
 [ -f /tmp/root/.XLOADED ] && rm -f /tmp/root/.XLOADED #130527
+[ -f /var/shared/.XLOADED ] && rm -f /var/shared/.XLOADED
 
 m_19="$(eval_gettext 'This program has created folder /tmp/root, which has everything that is now going to be added as /root in the ${PUPPYSFS} file.')
 $(gettext "This is mostly 'pristine', as obviously you do not want all your cache files, temp files, email files, and other working/temporary files to be burnt onto the CD. However, if you are familiar with the workings of Puppy, you might like to take a look at /tmp/root right now, and possibly add anything that you want from /root (or remove something!)")
