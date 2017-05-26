@@ -158,7 +158,8 @@ fi
 echo -n "true" > /var/shared/.XLOADED
 echo "$(gettext 'Starting X, specs in /etc/X11/xorg.conf, startup apps $HOME/.xinitrc...')"
 #-----------------------------------------------------------------------
-/usr/bin/xinit $HOME/.xinitrc -- -br -nolisten tcp > /tmp/xerrs.log 2>&1
+[ "`whoami`" != "root" ] && logfile='-logfile /var/shared/Xorg.log'
+/usr/bin/xinit $HOME/.xinitrc -- $logfile -br -nolisten tcp > /tmp/xerrs.log 2>&1
 #-----------------------------------------------------------------------
 echo -n "false" > /var/shared/.XLOADED #see note above.
 sleep 0.5
