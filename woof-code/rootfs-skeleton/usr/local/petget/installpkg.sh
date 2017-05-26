@@ -794,10 +794,21 @@ echo "PACKAGE: $DLPKG_NAME CATEGORY: $CATEGORY" >> /tmp/petget-installed-pkgs-lo
 # (the entry script pkg_chooser.sh has sudo to switch to root)
 HOMEUSER="`grep '^tty1' /etc/inittab | tr -s ' ' | cut -f 3 -d ' '`" #root or uzer.
 if [ "$HOMEUSER" != "root" ];then
- grep -E '^/var|^/root|^/etc' /var/packages/${DLPKG_NAME}.files |
+ grep -E '^/var|^/etc' /var/packages/${DLPKG_NAME}.files |
  while read FILELINE
  do
   busybox chown ${HOMEUSER}:users "${FILELINE}"
+ done
+ grep -E '^/root/' /var/packages/${DLPKG_NAME}.files |
+ while read FILELINE
+ do
+  dest="${FILELINE//root/home\/$HOMEUSER}"
+  if [ -d "${FILELINE}" ] ; then
+    mkdir -p "$dest"
+  else
+    cp -a --remove-destination "${FILELINE}" "$dest"
+  fi
+  busybox chown ${HOMEUSER}:users "$dest"
  done
 fi
 
