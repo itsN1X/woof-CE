@@ -19,12 +19,15 @@ if grep -q uzer /etc/inittab && [ -d /home/uzer ]; then
 	exit
 fi
 
+[ "`whoami`" != "root" ] && exec sudo -A ${0} ${@}
+
 if [ ! -d /home/uzer ] ; then
 	CHANGE_ROOT_PASS=yes
+	mkdir -p /home
 	cp -P -a /root /home/uzer
-	# change /root to /home/$USER
-	root_stuff=$(grep -r "/root" /home/$USER | sed 's|:.*||' | sort -u)
-	[ "$root_stuff" != "" ] && sed -i "s%/root%/home/$USER%g" $root_stuff
+	# change /root to /home/uzer
+	root_stuff=$(grep -r "/root" /home/uzer | sed 's|:.*||' | sort -u)
+	[ "$root_stuff" != "" ] && sed -i "s%/root%/home/uzer%g" $root_stuff
 fi
 
 # -h means affect symlinks instead of target, -R means recursive...
@@ -41,6 +44,7 @@ ln -sf ../../var/packages /home/uzer/.packages
 # fix /etc/passwd
 sed -i "s%/root/uzer%/home/uzer%" /etc/passwd
 sed -i "s%/root/%/home/uzer/%" /etc/passwd
+sed -i "s%/root%/home/uzer%" /etc/passwd
 
 #modify /etc/inittab to autologin as uzer...
 userEXPR='s%autologin root %autologin uzer %'
@@ -58,7 +62,7 @@ fi
 busybox chmod 770 /dev/zero
 busybox chmod 770 /dev/ptmx
 #set the setuid bit...
-busybox chmod u+s `which ddcprobe`
+[ "`which ddcprobe`" ] && busybox chmod u+s `which ddcprobe`
 [ "`which Xorg`" ] && busybox chmod u+s `which Xorg`
 
 #120317 L18L: ref http://murga-linux.com/puppy/viewtopic.php?t=71358&start=60

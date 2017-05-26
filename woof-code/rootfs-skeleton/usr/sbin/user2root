@@ -32,7 +32,7 @@ fi
 
 # fix /etc/passwd
 sed -i "s%/home/uzer/%/root/%" /etc/passwd
-sed -i "s%/home/uzer%/root/uzer%" /etc/passwd
+sed -i "s%/home/uzer%/root%" /etc/passwd
 
 /usr/lib/gtkdialog/box_ok "$(gettext 'Login manager')" complete "$(gettext 'Ok, you will be administrator at next boot')"
 
