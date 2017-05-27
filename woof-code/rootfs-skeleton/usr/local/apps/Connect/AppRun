@@ -14,8 +14,8 @@
 [ "`whoami`" != "root" ] && exec sudo -A ${0} ${@} #110505
 
 CURRENT_EXEC='' #170309... 170724
-if [ -f /root/.connectwizardrc ];then
- . /root/.connectwizardrc #sets CURRENT_EXEC
+if [ -f $HOME/.connectwizardrc ];then
+ . $HOME/.connectwizardrc #sets CURRENT_EXEC
 fi
 
 if [ "$CURRENT_EXEC" = "connectwizard" ];then #BK, 170309 end

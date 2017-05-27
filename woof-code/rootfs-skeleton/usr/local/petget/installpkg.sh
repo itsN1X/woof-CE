@@ -71,7 +71,7 @@ export LANG=C
 
 DLPKG="$1"
 DLPKG_BASE="`basename "$DLPKG"`" #ex: scite-1.77-i686-2as.tgz
-DLPKG_PATH="`dirname "$DLPKG"`"  #ex: /root
+DLPKG_PATH="`dirname "$DLPKG"`"  #ex: $HOME
 DL_SAVE_FLAG=$(cat /var/local/petget/nd_category 2>/dev/null)
 
 clean_and_die () {

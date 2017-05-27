@@ -129,5 +129,5 @@ cd /tmp
 tar -czf ~/pmodemdiag-$NAMEDATE.tar.gz pmodemdiag-$NAMEDATE
 cd
 echo " Diagnostic file collection complete."
-echo -e " Tarball /root/pmodemdiag-$NAMEDATE.tar.gz can be attached to a posting or\n  personal message (PM) in the Puppy forum, for analysis of dialup-modem\n  or other issues."
+echo -e " Tarball $HOME/pmodemdiag-$NAMEDATE.tar.gz can be attached to a posting or\n  personal message (PM) in the Puppy forum, for analysis of dialup-modem\n  or other issues."
 echo " The content can be viewed in /tmp/pmodemdiag-$NAMEDATE/."

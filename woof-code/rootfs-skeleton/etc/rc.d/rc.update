@@ -3,6 +3,8 @@
 #This script is called by /etc/rc.d/rc.sysinit. the purpose is to perform
 #any required updates to files when a new version of Puppy is booted.
 
+[ -z "$HOMEUSER" ] && . /bin/gethome inittab
+
 PUPMODE="$1"
 [ "$PUPMODE" = "" ] && exit
 

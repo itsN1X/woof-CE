@@ -46,9 +46,9 @@ FLAGPET="" #101016
 
 if [ -f /var/packages/download_path ]; then
  . /var/packages/download_path
- [ -d "$DL_PATH" -a -w "$DL_PATH" ] && DL_PATH="$DL_PATH" || DL_PATH=/root
+ [ -d "$DL_PATH" -a -w "$DL_PATH" ] && DL_PATH="$DL_PATH" || DL_PATH=$HOME
 else
- DL_PATH=/root
+ DL_PATH=$HOME
 fi
 
 DL_SAVE_FLAG=$(cat /var/local/petget/nd_category 2>/dev/null)
@@ -161,7 +161,7 @@ do
  #if [ "$RADIO_URL_LOCAL" = "true" ];then
  if [ "`echo "$RETPARAMS" | grep 'RADIO_URL_LOCAL' | grep 'true'`" != "" ];then
   #put up a dlg box asking for folder with pkgs...
-  LOCALDIR="/root"
+  LOCALDIR="$HOME"
   if [ -s /var/log/petlocaldir ];then
    OLDLOCALDIR="`cat /var/log/petlocaldir`"
    [ -d $OLDLOCALDIR ] && LOCALDIR="$OLDLOCALDIR"

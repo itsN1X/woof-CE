@@ -32,7 +32,7 @@ case $INSTALLEDPKG in
     chmod 755 /opt/google/chrome/chrome
     [ -e /usr/bin/google-chrome ] && rm -f /usr/bin/google-chrome
     echo '#!/bin/sh
-exec /opt/google/chrome/google-chrome --user-data-dir=/root/.config/chrome --disk-cache-size=10000000 --media-cache-size=10000000 "$@"' > /usr/bin/google-chrome
+exec /opt/google/chrome/google-chrome --user-data-dir=${HOME}/.config/chrome --disk-cache-size=10000000 --media-cache-size=10000000 "$@"' > /usr/bin/google-chrome
     chmod 755 /usr/bin/google-chrome
     ln -s google-chrome /usr/bin/chrome
     ln -s /opt/google/chrome/product_logo_48.png /usr/share/pixmaps/google-chrome.png
@@ -61,13 +61,13 @@ Categories=WebBrowser;' > /usr/share/applications/google-chrome.desktop
   case $LANGUSER in
    zh*|ja*|ko*) #chinese, japanese, korean
     sed -i -e 's%DejaVu Sans%Sans%' /etc/xdg/templates/_root_*
-    sed -i -e 's%DejaVu Sans%Sans%' /root/.jwm/themes/*-jwmrc
-    sed -i -e 's%DejaVu Sans%Sans%' /root/.jwm/jwmrc-theme
+    sed -i -e 's%DejaVu Sans%Sans%' $HOME/.jwm/themes/*-jwmrc
+    sed -i -e 's%DejaVu Sans%Sans%' $HOME/.jwm/jwmrc-theme
    ;;
   esac
   #130326 font size fix for 96 dpi...
   if [ "$INSTALLEDNAME" ];then
-   JWMTHEMEFILE="$(grep '^/root/\.jwm/themes/.*-jwmrc$' /var/packages/${INSTALLEDNAME}.files | head -n 1)"
+   JWMTHEMEFILE="$(grep "^${HOME}/\.jwm/themes/.*-jwmrc$" /var/packages/${INSTALLEDNAME}.files | head -n 1)"
    [ "$JWMTHEMEFILE" ] && hackfontsize "JWMTHEMES='${JWMTHEMEFILE}'"
   fi
  ;;
@@ -78,7 +78,7 @@ Categories=WebBrowser;' > /usr/share/applications/google-chrome.desktop
   case $LANGUSER in
    zh*|ja*|ko*) #chinese, japanese, korean
     sed -i -e 's%DejaVu Sans%Sans%' /etc/xdg/openbox/*.xml
-    sed -i -e 's%DejaVu Sans%Sans%' /root/.config/openbox/*.xml
+    sed -i -e 's%DejaVu Sans%Sans%' $HOME/.config/openbox/*.xml
    ;;
   esac
  ;;
@@ -107,7 +107,7 @@ Categories=WebBrowser;' > /usr/share/applications/google-chrome.desktop
   LANGUSER="`grep '^LANG=' /etc/profile | cut -f 2 -d '=' | cut -f 1 -d ' '`"
   case $LANGUSER in
    zh*|ja*|ko*) #chinese, japanese, korean
-    MOZFILE="$(find /root/.mozilla -type f -name prefs.js -o -name '*.css' | tr '\n' ' ')"
+    MOZFILE="$(find $HOME/.mozilla -type f -name prefs.js -o -name '*.css' | tr '\n' ' ')"
     for ONEMOZ in $MOZFILE
     do
      sed -i -e 's%DejaVu Sans%Sans%' $ONEMOZ

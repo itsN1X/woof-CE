@@ -77,8 +77,8 @@ RETSTRING="`gtkdialog -p Network_Connection_Wizard`"
 if [ "`echo "$RETSTRING" | grep '^EXIT' | grep 'FLAG'`" != "" ];then
  CHOSENWIZ="$(echo "$RETSTRING" | grep '^EXIT' | grep 'FLAG' | cut -f 2 -d \")"
  DEFAULTEXEC="`cat /usr/local/bin/defaultconnect | tail -n 1 | tr -s " " | cut -f 2 -d " "`" #170309...
- if [ -f /root/.connectwizardrc ];then
-  . /root/.connectwizardrc #sets CURRENT_EXEC
+ if [ -f $HOME/.connectwizardrc ];then
+  . $HOME/.connectwizardrc #sets CURRENT_EXEC
  else
   CURRENT_EXEC="$DEFAULTEXEC"
  fi #170309 end

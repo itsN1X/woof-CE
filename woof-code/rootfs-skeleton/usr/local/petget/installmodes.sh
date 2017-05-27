@@ -200,7 +200,7 @@ check_total_size () {
  ACTION_MSG=$(gettext 'This is not enough space to download and install the packages (including dependencies) you have selected.')
  if [ -f /tmp/download_pets_quietly -o -f /tmp/download_only_pet_quietly ]; then
   NEEDEDK=$( expr $NEEDEDK / 3 ) # 0.5x
-  [ "$DL_PATH" ] && DOWN_PATH="$DL_PATH" || DOWN_PATH="/root"
+  [ "$DL_PATH" ] && DOWN_PATH="$DL_PATH" || DOWN_PATH="$HOME"
   ACTION_MSG="$(gettext 'This is not enough space to download the packages (including dependencies) you have selected in ')${DOWN_PATH}."
  fi
  if [ "$(cat /var/local/petget/nd_category 2>/dev/null)" = "true" ]; then
@@ -235,7 +235,7 @@ check_total_size () {
  else
   AVAILABLE=$(cat /tmp/pup_event_sizefreem | head -n 1 )
  fi
- if [ "$DL_PATH" -a ! "$DL_PATH" = "/root" ]; then
+ if [ "$DL_PATH" -a ! "$DL_PATH" = "$HOME" ]; then
   if [ -f /tmp/download_pets_quietly -o -f /tmp/download_only_pet_quietly \
    -o "$(cat /var/local/petget/nd_category 2>/dev/null)" = "true" ]; then
    SAVEAVAILABLE=$(df -m "$DL_PATH"| awk 'END {print $4}')

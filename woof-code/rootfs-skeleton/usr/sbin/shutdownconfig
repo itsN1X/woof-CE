@@ -613,7 +613,7 @@ If anything looks wrong, choose \Zb\\\${T_notsave}\ZB...\"`"
 <text use-markup=\"true\"><label>\"<big>${altT_createsf}</big>\"</label></text>
 </vbox>
 </window>"
-  GTK2_RC_FILES=/tmp/orange_gtkrc${$}:/root/.gtkrc-2.0 gtkdialog --center --class="splashwindow" --program=SHUTDLG & #130525 130712
+  GTK2_RC_FILES=/tmp/orange_gtkrc${$}:$HOME/.gtkrc-2.0 gtkdialog --center --class="splashwindow" --program=SHUTDLG & #130525 130712
   w1PID=$!
  else
   ${DIALOGEXE} ${BACKGROUNDORANGE} ${TITLEPARAM} "$T_createtitle" --colors --ok-label "OK" --msgbox "$T_createsf" 0 0 &
@@ -743,7 +743,7 @@ offersfscopy() {
      <text use-markup=\"true\"><label>\"<big>${T_waitcopy}</big>\"</label></text>
      </vbox>
      </window>"
-     GTK2_RC_FILES=/tmp/orange_gtkrc${$}:/root/.gtkrc-2.0 gtkdialog --center --class="splashwindow" --program=COPYSFSDLG & #130712
+     GTK2_RC_FILES=/tmp/orange_gtkrc${$}:$HOME/.gtkrc-2.0 gtkdialog --center --class="splashwindow" --program=COPYSFSDLG & #130712
      cPID=$!
     else
      ${DIALOGEXE} ${BACKGROUNDORANGE} ${TITLEPARAM} "$T_copytitle" --msgbox "$T_waitcopy" 0 0 &

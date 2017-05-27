@@ -80,11 +80,11 @@ if [ -f /var/packages/download_path ]; then
  if [ -d "$DL_PATH" ];then
   DL_PATH="$DL_PATH"
  else
-  DL_PATH=/root
+  DL_PATH=$HOME
   rm -f /var/packages/download_path
  fi
 else
- DL_PATH=/root
+ DL_PATH=$HOME
 fi
 
 DBmethod="$(cat /var/local/petget/db_verbose)"
@@ -231,7 +231,7 @@ S='<window title="'$(gettext 'Puppy Package Manager - Configure')'" icon-name="g
       </checkbox>
       <hbox>
         <text width-request="100"><label>'$(gettext "Save PKGs in:")'</label></text>
-        <entry accept="folder" width-request="200" tooltip-text="'$(gettext "To change, type a path to a folder or use the button to select a folder. Delete the present path to default back to /root")'"><default>'${DL_PATH}'</default><variable>SAVEPATH</variable></entry>
+        <entry accept="folder" width-request="200" tooltip-text="'$(gettext "To change, type a path to a folder or use the button to select a folder. Delete the present path to default back to $HOME")'"><default>'${DL_PATH}'</default><variable>SAVEPATH</variable></entry>
         <button>
          <input file stock="gtk-open"></input>
          <action type="fileselect">SAVEPATH</action>
@@ -263,7 +263,7 @@ S='<window title="'$(gettext 'Puppy Package Manager - Configure')'" icon-name="g
 </window>'
 export PPM_CONFIG="$S"
 
-#echo "$PPM_CONFIG" > /root/gtk
+#echo "$PPM_CONFIG" > $HOME/gtk
 
 RETPARAMS="`gtkdialog -p PPM_CONFIG`"
 #ex:

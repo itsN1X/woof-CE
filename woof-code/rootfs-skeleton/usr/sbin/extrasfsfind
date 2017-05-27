@@ -89,7 +89,7 @@ skiploaded() {
 skipinstalled() {
   FOUND=$(echo "$FOUND"| grep '.')	# renove blank line
   [ "$FOUND" ] || return
-  [ "$HOME" ] || HOME=/root
+  [ "$HOME" ] || HOME=$HOME
   NEWLIST=""
   for F in $FOUND; do
     ONEBASE=$(basename $F | rev | cut -f2- -d'.' | rev)

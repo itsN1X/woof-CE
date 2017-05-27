@@ -18,7 +18,7 @@
 
 [ "`whoami`" != "root" ] && exec sudo -A ${0} ${@}
 
-. /bin/gethome inittab export
+[ -z "$HOMEUSER" ] && . /bin/gethome inittab export
 if [ "$HOMEUSER" != "root" ] ; then
 	optstr="uid=$(id -u $HOMEUSER),gid=$(id -g $HOMEUSER)"
 	USER_OTPS="${optstr},"

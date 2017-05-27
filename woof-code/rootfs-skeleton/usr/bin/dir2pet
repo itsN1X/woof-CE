@@ -310,7 +310,7 @@ if [ "$skip" != 1 ];then
      echo -e "\\033[0;39m"
      echo "Please enter the name of the executable. If it is in the"
      echo "executable-search-path, namely /bin, /sbin, /usr/bin,"
-     echo "/usr/sbin, /root/my-applications/bin or /usr/local/bin,"
+     echo "/usr/sbin, $HOME/my-applications/bin or /usr/local/bin,"
      echo "then you only need to enter the name of the executable"
      echo "not the path. Example: mtpaint"
      echo "(of course, if you need to specify the path here, it is"

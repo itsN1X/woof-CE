@@ -142,13 +142,13 @@ PID2="$(echo "$ALLPS" | grep 'ppm$' | sed -e 's%^ %%g' | cut -f 1 -d ' ')"
 [ "$PID1" ] && kill $PID1
 [ "$PID2" ] && kill $PID2 2>/dev/null
 
-cd /root
-[ -f /root/$DLPET ] && rm -f /root/$DLPET
+cd $HOME
+[ -f $HOME/$DLPET ] && rm -f $HOME/$DLPET
 download_file "${URLSPEC}${DLPET}"
 if [ $? -eq 0 ];then
- if [ -f /root/$DLPET ];then
-  petget /root/$DLPET #install the PET
-  rm -f /root/$DLPET
+ if [ -f $HOME/$DLPET ];then
+  petget $HOME/$DLPET #install the PET
+  rm -f $HOME/$DLPET
  else
     /usr/lib/gtkdialog/box_ok "$(gettext 'Download failed')" error "$(gettext 'Sorry, the PET did not download. Perhaps try later.')"
   exit 6

@@ -43,7 +43,7 @@ options_status () {
 	[ -f /var/packages/skip_space_check ] && \
 	 MSG_SPACE="$(gettext 'Do NOT check available space.')
 	 $(gettext '')"
-	[ -f /var/packages/download_path ] && [ "$DL_PATH" != "/root" ] && \
+	[ -f /var/packages/download_path ] && [ "$DL_PATH" != "$HOME" ] && \
 	 MSG_DPATH="$(gettext 'Download packages in ')${DL_PATH}.
 	 $(gettext '')"
 	[ "$(cat /var/local/petget/install_mode 2>/dev/null)" = "true" ] && \
@@ -766,7 +766,7 @@ style "icon-style" {
 	}
 class "GtkWidget" style "icon-style"' > /tmp/puppy_package_manager/gtkrc_ppm
 
-export GTK2_RC_FILES=/root/.gtkrc-2.0:/tmp/puppy_package_manager/gtkrc_ppm
+export GTK2_RC_FILES=$HOME/.gtkrc-2.0:/tmp/puppy_package_manager/gtkrc_ppm
 . /usr/lib/gtkdialog/xml_info gtk #build bg_pixmap for gtk-theme
 
 gtkdialog -p PPM_GUI

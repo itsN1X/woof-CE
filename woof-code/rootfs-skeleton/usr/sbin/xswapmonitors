@@ -24,7 +24,7 @@ done
 
 while [ 1 ] ; do
 
-	if [ -s /root/Startup/setmonitors ] ; then
+	if [ -s $HOME/Startup/setmonitors ] ; then
 		BUTTON_DELETE='<button space-expand="false" space-fill="false">
 				<label>'$(gettext 'Delete config')'</label>
 				<action>exit:DELETE</action>
@@ -68,10 +68,10 @@ while [ 1 ] ; do
 	if [ "$EXIT" = "SWAP" ] ; then
 		xrandr --output $MONITOR0 --auto --output $MONITOR1 --auto --right-of $MONITOR0
 		echo "#!/bin/sh
-xrandr --output $MONITOR0 --auto --output $MONITOR1 --auto --right-of $MONITOR0" > /root/Startup/setmonitors
-		chmod 755 /root/Startup/setmonitors
+xrandr --output $MONITOR0 --auto --output $MONITOR1 --auto --right-of $MONITOR0" > $HOME/Startup/setmonitors
+		chmod 755 $HOME/Startup/setmonitors
 	elif [ "$EXIT" = "DELETE" ] ; then
-		rm -f /root/Startup/setmonitors
+		rm -f $HOME/Startup/setmonitors
 		/usr/lib/gtkdialog/box_yesno --yes-first "$(gettext 'Delete config')" "$(gettext 'Do you want to restart X')"
 		[ $? -eq 0 ] && restartwm
 		break

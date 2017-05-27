@@ -105,7 +105,7 @@ fi
 Xdialog --yesno "$(gettext 'Save current configuration?')" 0 0
 if [ ${?} -eq 0 ]; then
   echo -n "xgamma -rgamma $YRED -ggamma $YGREEN -bgamma $YBLUE"' &' > $HOME/.xgamma-gamma
-  #...xgamma is executed in /root/.xinitrc
+  #...xgamma is executed in $HOME/.xinitrc
   echo "Saved"  
 fi
 

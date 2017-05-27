@@ -157,13 +157,13 @@ ALLPS="`busybox ps`"
  [ "$PID2" ] && kill $PID2 2>/dev/null
 fi
 
-cd /root
-[ -f /root/$DLPET ] && rm -f /root/$DLPET
+cd $HOME
+[ -f $HOME/$DLPET ] && rm -f $HOME/$DLPET
 download_file "${URLSPEC}${DLPET}"
 if [ $? -eq 0 ];then
- if [ -f /root/$DLPET ];then
-  petget /root/$DLPET #install the PET
-  rm -f /root/$DLPET
+ if [ -f $HOME/$DLPET ];then
+  petget $HOME/$DLPET #install the PET
+  rm -f $HOME/$DLPET
  else
   /usr/lib/gtkdialog/box_ok "$(gettext 'Puppy package manager')" error "<b>$(gettext 'Download failed')</b>" "$(gettext 'Sorry, the PET did not download. Perhaps try later.')"
   exit 6
