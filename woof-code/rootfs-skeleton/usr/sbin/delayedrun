@@ -5,6 +5,7 @@
 # see also /etc/sudoers -- set delayedrun does not require password,
 # probably a security hole, need to look at it again later.
 [ "`whoami`" != "root" ] && exec sudo -A ${0} ${@}
+[ -z "$HOMEUSER" ] && . /bin/gethome inittab export
 
 # variables created at bootup by 'init' in initramfs...
 . /etc/rc.d/PUPSTATE
@@ -75,10 +76,17 @@ if [ $PUPMODE -eq 5 ];then
  fi
 fi
 
-if [ -d /root/Startup ];then
- for A in /root/Startup/* ; do
-  $A 2>/dev/null & 
-  sleep 0.2
+# launch apps in $HOME/Startup
+# but if we're actually using a non-root account
+# we won't have control over the processes
+# so we have to run the apps as the $HOMEUSER
+[ "$HOMEUSER" != "root" ] && USER_CMD="sudo -u $HOMEUSER"
+
+if [ -d $HOME/Startup ];then
+ for A in $HOME/Startup/* ; do
+  case $A in *.txt|*.TXT) continue ;; esac
+  ${USER_CMD} $A 2>/dev/null & 
+  sleep 0.3
  done
 fi
 
