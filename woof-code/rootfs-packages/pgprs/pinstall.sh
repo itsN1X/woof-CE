@@ -39,7 +39,7 @@ if [ "$(pwd)" = "/" ];then
  if [ ! -f usr/share/pixmaps/puppy/wireless.svg ];then
   rm -f usr/share/pixmaps/pgprs.svg
   ln -snf /usr/local/lib/X11/mini-icons/Pwireless.png usr/share/pixmaps/pgprs.png
-  sed -i '/pgprs\.svg/ s/svg/png/' root/.packages/pgprs-*.files
+  sed -i '/pgprs\.svg/ s/svg/png/' /var/packages/pgprs-*.files
   sed -i '/pgprs\.svg/ s/svg/png/' usr/share/applications/pgprs-connect.desktop
  fi
 fi

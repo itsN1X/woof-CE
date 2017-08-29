@@ -1,7 +1,7 @@
 "spot" is a restricted user of Puppy.
-(you could also add fido, rover, rex!)
+(you could also add uzer, rover, rex!)
 
-/root/spot is spot's home directory.
+${HOME}/spot is spot's home directory.
 
 To change from root to user spot, type this:
 

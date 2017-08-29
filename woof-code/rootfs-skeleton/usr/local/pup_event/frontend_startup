@@ -2,7 +2,7 @@
 #(c) Copyright 2013 Barry Kauler bkhome.org
 #2013 Licence GPL3 (/usr/share/doc/legal).
 #this is startup code, called from /usr/local/pup_event/pup_event_frontend_d
-# (which in turn is called from /root/.xinitrd when X starts).
+# (which in turn is called from $HOME/.xinitrd when X starts).
 #the code in this script was extracted from the retired script /sbin/pup_event_frontend_d.
 #130609 first version.
 #130807 L18L: gettext declaration moved to frontend_funcs.
@@ -10,6 +10,8 @@
 #export TEXTDOMAIN=pup_event_frontend_d
 #export OUTPUT_CHARSET=UTF-8
 #. gettext.sh
+
+[ -z "$HOMEUSER" ] && . /bin/gethome inittab export
 
 OLDLANG=$LANG #100613
 export LANG=C #w004
@@ -47,7 +49,7 @@ echo -n "$SCRN_Y" > /tmp/pup_event_frontend_scrn_y #read by frontend_change.
 
 ######################################################################
 #stuff to setup at entry...
-mkdir -p /root/.pup_event
+mkdir -p $HOME/.pup_event
 
 #build the desktop icons...
 DRV_CATEGORY='drive'

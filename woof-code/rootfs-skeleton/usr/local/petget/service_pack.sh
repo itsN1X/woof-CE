@@ -15,7 +15,7 @@ export TEXTDOMAIN=petget___service_pack.sh
 export OUTPUT_CHARSET=UTF-8
 
 . /etc/DISTRO_SPECS #has DISTRO_DB_SUBNAME
-. /root/.packages/DISTRO_PET_REPOS #has PET_REPOS, PKG_DOCS_PET_REPOS
+. /var/packages/DISTRO_PET_REPOS #has PET_REPOS, PKG_DOCS_PET_REPOS
 
 mkdir -p /tmp/petget
 
@@ -48,7 +48,7 @@ spPTN1="|service_pack.*\.pet|"
 
 #121217 precaution, check highest already installed...
 INSTBIGGEST="$DISTRO_VERSION" #140106
-INSTALLEDVERS="$(grep "$spPTN1" /root/.packages/user-installed-packages /root/.packages/woof-installed-packages | cut -f 3 -d '|' | cut -f 3 -d '_' | cut -f 1 -d '-' | tr '\n' ' ')"
+INSTALLEDVERS="$(grep "$spPTN1" /var/packages/user-installed-packages /var/packages/woof-installed-packages | cut -f 3 -d '|' | cut -f 3 -d '_' | cut -f 1 -d '-' | tr '\n' ' ')"
 for ONEIN in $INSTALLEDVERS
 do
  if vercmp $ONEIN ge $INSTBIGGEST;then
@@ -71,7 +71,7 @@ do
    if vercmp $ENDVER gt $DISTRO_VERSION;then #121129
     #check whether already installed...
     spPTN2="_TO_${ENDVER}"
-    FNDINST="$(cat /root/.packages/user-installed-packages /root/.packages/woof-installed-packages | grep "$spPTN1" | grep "$spPTN2" | cut -f 1 -d '|')"
+    FNDINST="$(cat /var/packages/user-installed-packages /var/packages/woof-installed-packages | grep "$spPTN1" | grep "$spPTN2" | cut -f 1 -d '|')"
     [ "$FNDINST" != "" ] && continue
     CNT=`expr $CNT + 1`
     #find the size...
@@ -142,13 +142,13 @@ PID2="$(echo "$ALLPS" | grep 'ppm$' | sed -e 's%^ %%g' | cut -f 1 -d ' ')"
 [ "$PID1" ] && kill $PID1
 [ "$PID2" ] && kill $PID2 2>/dev/null
 
-cd /root
-[ -f /root/$DLPET ] && rm -f /root/$DLPET
+cd $HOME
+[ -f $HOME/$DLPET ] && rm -f $HOME/$DLPET
 download_file "${URLSPEC}${DLPET}"
 if [ $? -eq 0 ];then
- if [ -f /root/$DLPET ];then
-  petget /root/$DLPET #install the PET
-  rm -f /root/$DLPET
+ if [ -f $HOME/$DLPET ];then
+  petget $HOME/$DLPET #install the PET
+  rm -f $HOME/$DLPET
  else
     /usr/lib/gtkdialog/box_ok "$(gettext 'Download failed')" error "$(gettext 'Sorry, the PET did not download. Perhaps try later.')"
   exit 6

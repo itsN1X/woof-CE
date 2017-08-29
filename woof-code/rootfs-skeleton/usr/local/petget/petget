@@ -6,7 +6,7 @@
 #If passed param is a pkg name preceded by a + to install pkg, - to uninstall pkg.
 # example: +xbubble-0.2.4
 #For integration with Rox-Filer, commandline is a .pet|.deb|.tgz|.tar,gz with absolute path, install.
-# ex: petget /root/xbubble-0.2.4.pet
+# ex: petget $HOME/xbubble-0.2.4.pet
 #For integration with browser, ex: petget http://somewhere.on.internet/xbubble-0.2.4.pet
 #Note, petget also get called from /etc/rc.d/rc.update to remove packages. ex:
 # petget -xbubble-0.2.4
@@ -74,7 +74,7 @@ esac
 PKGNAME=""
 DOWNLOADED=""
 if [ "`echo -n "$PASSEDPARAM" | grep -E '^ftp|^http'`" != "" ];then
- cd /root
+ cd $HOME
  #101116 use download_file utility...
  download_file "$PASSEDPARAM"
  PKGPATH="`dirname "$PASSEDPARAM"`" #really a url.
@@ -109,10 +109,10 @@ else
    PKGMAIN="`basename "$PASSEDPARAM" ${EXT}`"
   fi
  fi
- cp -f "${PKGPATH}/${FULLPKGNAME}" /root/ 2>/dev/null #v424 fix if spaces in path.
+ cp -f "${PKGPATH}/${FULLPKGNAME}" $HOME/ 2>/dev/null #v424 fix if spaces in path.
 fi
 originPKGPATH="$PKGPATH" #w482
-PKGPATH=/root
+PKGPATH=$HOME
 
 #split PKGMAIN, ex: FULLPKGNAME=xvidtune-1.0.1-i486-1.tgz has PKGNAME=xvidtune-1.0.1
 case $EXT in
@@ -161,7 +161,7 @@ case $EXT in
   ;;
 esac
 
-cd "$PKGPATH" #well, this is /root
+cd "$PKGPATH" #well, this is $HOME
 
 #confirm want to install...
 if [ "$DISPLAY" ]; then
@@ -172,8 +172,8 @@ else
   RETVAL=$?
 fi
 if [ $RETVAL -ne 0 ] ; then #DON'T WANT TO INSTALL..
-  [ "$DOWNLOADED" = "yes" -o "$originPKGPATH" = "/root" ] && exit 0
-  rm -f /root/${FULLPKGNAME}
+  [ "$DOWNLOADED" = "yes" -o "$originPKGPATH" = "$HOME" ] && exit 0
+  rm -f $HOME/${FULLPKGNAME}
   exit 0
 fi
 
@@ -182,18 +182,18 @@ fi
 #optionally on the end: compileddistro|compiledrelease|repo| (fields 11,12,13)
 pPATTERN='^'"$PKGNAME"'|'
 if [ "$EXT" = ".pet" ];then
- DB_ENTRY="`cat /root/.packages/Packages-puppy-* | grep "$pPATTERN" | sort -r | head -n 1`"
+ DB_ENTRY="`cat /var/packages/Packages-puppy-* | grep "$pPATTERN" | sort -r | head -n 1`"
 else
- DB_ENTRY="`cat /root/.packages/Packages-${DISTRO_BINARY_COMPAT}-* | grep "$pPATTERN" | head -n 1`"
+ DB_ENTRY="`cat /var/packages/Packages-${DISTRO_BINARY_COMPAT}-* | grep "$pPATTERN" | head -n 1`"
 fi
 
 #w482 doesn't matter if incomplete, installpkg.sh will read .desktop file for description and category...
-#also, if .pet pkg has pet.specs, that will get written to /root/.packages/user-packages-installed
+#also, if .pet pkg has pet.specs, that will get written to /var/packages/user-packages-installed
 if [ "$DB_ENTRY" = "" ];then
  DB_ENTRY="${PKGNAME}|${DB_nameonly}|${DB_version}|${DB_pkgrelease}||||${FULLPKGNAME}|||"
 fi
 
-#w482 hack, if pkg was originally at /root then don't delete it...
+#w482 hack, if pkg was originally at $HOME then don't delete it...
 [ "$originPKGPATH" = "$PKGPATH" ] && cp -f ${PKGPATH}/${FULLPKGNAME} ${PKGPATH}/${FULLPKGNAME}-TEMPBACKUP
 
 #install pkg...
@@ -207,12 +207,12 @@ RETVAL=$?
 rm -f $PKGPATH/$FULLPKGNAME 2>/dev/null
 rm -f $PKGPATH/${PKGNAME}.tar.gz 2>/dev/null
 
-#w482 hack, if pkg was originally at /root then don't delete it...
+#w482 hack, if pkg was originally at $HOME then don't delete it...
 [ "$originPKGPATH" = "$PKGPATH" ] && mv -f ${PKGPATH}/${FULLPKGNAME}-TEMPBACKUP ${PKGPATH}/${FULLPKGNAME}
 
 #announce result...
 if [ $RETVAL -ne 0 -o ! -s /tmp/petget-installed-pkgs-log ];then
- ISTHERE="$(grep ${FULLPKGNAME} /root/.packages/user-installed-packages)"
+ ISTHERE="$(grep ${FULLPKGNAME} /var/packages/user-installed-packages)"
  if [ "$DISPLAY" ]; then
   [ "$ISTHERE" = "" ] && . /usr/lib/gtkdialog/box_ok "$(gettext 'Puppy Package Manager')" error "<b>${FULLPKGNAME} $(gettext 'failed to install')</b>"
   exit
@@ -271,7 +271,7 @@ else
 fi
 
 #120819 having a category does not mean there will also be a menu entry...
-if [ "`grep '/usr/.*share/applications/.*\.desktop$' /root/.packages/${PKGNAME}.files`" = "" ];then
+if [ "`grep '/usr/.*share/applications/.*\.desktop$' /var/packages/${PKGNAME}.files`" = "" ];then
  MENUMSG="$(gettext '...note, this package does not have a menu entry.')"
 fi
 
@@ -292,8 +292,8 @@ else
 fi
 
 #w0910 update image cache...
-if [ -f /root/.packages/${PKGNAME}.files ];then
- if [ "`grep 'usr/share/icons/hicolor' /root/.packages/${PKGNAME}.files`" != "" ];then
+if [ -f /var/packages/${PKGNAME}.files ];then
+ if [ "`grep 'usr/share/icons/hicolor' /var/packages/${PKGNAME}.files`" != "" ];then
   gtk-update-icon-cache -f /usr/share/icons/hicolor/
  fi
 fi

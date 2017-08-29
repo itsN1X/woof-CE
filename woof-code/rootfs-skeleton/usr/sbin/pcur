@@ -28,7 +28,7 @@ func_switch (){
 
 func_download (){
 	REPO=http://distro.ibiblio.org/puppylinux/pet_packages-noarch
-	PKG=`grep -iE "cursor_themes" ~/.packages/Packages-puppy-noarch-official|awk -F'|' '{print $8}'`
+	PKG=`grep -iE "cursor_themes" /var/packages/Packages-puppy-noarch-official|awk -F'|' '{print $8}'`
 	download_file ${REPO}/${PKG}
 	[ $? -ne 0 ] && /usr/lib/gtkdialog/box_ok "pCur - $(gettext 'Cursor theme setter')" error "$(gettext 'Failed to download package')" && exit 1
 	petget +${PKG}

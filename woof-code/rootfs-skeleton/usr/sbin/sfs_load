@@ -87,11 +87,13 @@ PUPSAVECONFIG=$(which pupsaveconfig)
 PUPSAVECONF=/etc/rc.d/pupsave.conf
 SHUTDOWNCONF=/tmp/shoudownconfig_results
 DISTRO_SPECS=/etc/DISTRO_SPECS
-PKGDIR="/root/.packages"
+PKGDIR="/var/packages"
 INSTALLEDLIST="$PKGDIR/user-installed-packages"
 WOOFLIST="$PKGDIR/woof-installed-packages"
 SFSCONVERT="/usr/local/sfsconvert/sfsconvert"
-[ "$HOME" ] || HOME=/root
+
+. /bin/gethome inittab export
+
 JWMRC="$HOME/.jwmrc"
 [ -x "$SFSCONVERT" ] || SFSCONVERT=""
 
@@ -459,7 +461,7 @@ defaults-chooser' > $F
   fi
   if [ "$HAS_STARTUPS" != "" -a "$DISPLAY" ]; then	#v1.9.2
     for S in $HAS_STARTUPS; do
-      [ -x /root/Startup/$S ] && /root/Startup/$S &
+      [ -x $HOME/Startup/$S ] && $HOME/Startup/$S &
       sleep 0.2
     done
   fi
@@ -634,7 +636,7 @@ queued_sfs_list() {
 
 INSTALLEDLIST=""
 installed_sfs_lst() {
-  #PKGDIR="/root/.packages"
+  #PKGDIR="/var/packages"
   #INSTALLEDLIST="$PKGDIR/user-installed-packages"
   [ "$1" != "" ] && QUERY=$(basename "$1" .sfs) || QUERY=""
   [ -f "$INSTALLEDLIST" ] || return 1
@@ -1530,7 +1532,7 @@ unload() {
         rm -f "$EXTRASFS"
         RMLOG=$(printf "$(gettext "The temporary file '%s' is deleted.")" "$EXTRASFS")
         FOUND=""
-        for D in / /root/; do
+        for D in / $HOME/; do
           [ -e "$D$FILENAME" ] && FOUND="$D$FILENAME" && break
         done
         if [ "$FOUND" ]; then
@@ -1710,9 +1712,6 @@ KERNVER="`uname -r | cut -f 1 -d \-`" #20151004
 SUPPORTSIG="green"
 SFSVER=4 #supported
 
-[ "$HOME" = "/" ] && HOME=/root
-[ "$HOME" ] || HOME=/root
-
 # home path
 PUPHOME=""
 PSUBDIR=""
@@ -1733,7 +1732,7 @@ if [ "$PUPSAVE" != "" ]; then
 else
   # PUPMODE=2 or 5
   if [ "$PUPMODE" = "2" ]; then
-    DESTDIR="/root"; PUPHOME="/"
+    DESTDIR="$HOME"; PUPHOME="/"
   else
     # PUPMODE=5
     [  -s "$PUPSAVECONF" ] && source "$PUPSAVECONF" && PUPSAVE="$SAVEPART,,$SAVEFILE"
@@ -1881,9 +1880,9 @@ if [ "$STARTSCRIPT" ]; then
      echo "y" > "$MYTMPDIR/has_glib_schema"
      echo "/usr/sharefonts" > "$MYTMPDIR/has_fonts"	###FIXME subdirs ###
     #puppy pins
-    if [ -s "/root/Choices/ROX-Filer/PuppyPin" ]; then
-      cp -f "/root/Choices/ROX-Filer/globicons" "$MYTMPDIR/globicons-sfs_load"
-      cp -f "/root/Choices/ROX-Filer/PuppyPin" "$MYTMPDIR/PuppyPin-sfs_load"
+    if [ -s "$HOME/Choices/ROX-Filer/PuppyPin" ]; then
+      cp -f "$HOME/Choices/ROX-Filer/globicons" "$MYTMPDIR/globicons-sfs_load"
+      cp -f "$HOME/Choices/ROX-Filer/PuppyPin" "$MYTMPDIR/PuppyPin-sfs_load"
       echo "PuppyPin-sfs_load" >  "$MYTMPDIR/has_pins"
     fi
    fi
@@ -2142,7 +2141,7 @@ if [ "$SFSMODE" = "tmp" -a "$FILEISAT" != "home" -a  "$FILEISAT" != "ata" ]; the
        DESTISAT="tmp"
        ;;
   CD)  DESTDIR=/	#DESTDIR="/initrd/pup_rw"
-       [ "$SUPPORTSIG" = 'yellow' ] && DESTDIR="/root"
+       [ "$SUPPORTSIG" = 'yellow' ] && DESTDIR="$HOME"
        DESTISAT="tmpfs"
        SFSMODE="cd"
        ;;

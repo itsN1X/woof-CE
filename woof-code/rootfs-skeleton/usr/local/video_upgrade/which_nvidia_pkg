@@ -17,11 +17,11 @@ echo -n "" > /tmp/vuw_nvidia_pkg
 KERNELVER="`uname -r`"
 #110827 nvidia db entry may have dep |+linux_kernel&eq2.6.32|, so insert 'q'... pkg split...
 kPATTERN='[kq]'"`echo -n "$KERNELVER" | sed -e 's%\.%\\\.%g'`"
-PETS_NVIDIA="`grep -E '^nvidia\-|^nvidia_kmodule' /root/.packages/${PET_DB_FILE} | grep -i "${kPATTERN}" | cut -f 8 -d '|' | tail -n 1`"
+PETS_NVIDIA="`grep -E '^nvidia\-|^nvidia_kmodule' /var/packages/${PET_DB_FILE} | grep -i "${kPATTERN}" | cut -f 8 -d '|' | tail -n 1`"
 if [ "`echo -n "$PETS_NVIDIA" | grep '^nvidia_kmodule'`" != "" ];then
- NVIDIA_VER="`grep "$PETS_NVIDIA" /root/.packages/${PET_DB_FILE} | cut -f 3 -d '|' | cut -f 1 -d '-'`" #ex: 71.86.14
+ NVIDIA_VER="`grep "$PETS_NVIDIA" /var/packages/${PET_DB_FILE} | cut -f 3 -d '|' | cut -f 1 -d '-'`" #ex: 71.86.14
  vPATTERN="^nvidia_base\-${NVIDIA_VER}"
- NVIDIA_BASE="`grep "$vPATTERN" /root/.packages/${PET_DB_FILE} | cut -f 8 -d '|' | tail -n 1`"
+ NVIDIA_BASE="`grep "$vPATTERN" /var/packages/${PET_DB_FILE} | cut -f 8 -d '|' | tail -n 1`"
  PETS_NVIDIA="${NVIDIA_BASE}
 ${PETS_NVIDIA}"
 fi

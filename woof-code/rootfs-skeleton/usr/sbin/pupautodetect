@@ -6,7 +6,7 @@
 
 [ ! "$1" ] && exit
 [ "`pidof X`" = "" -a "`pidof Xorg`" = "" ] && exit #X not running.
-export PATH='/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/root/my-applications/bin'
+export PATH="/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:${HOME}/my-applications/bin"
 export DISPLAY=':0'
 
 #111010 maybe wait until delayedrun has done its stuff...

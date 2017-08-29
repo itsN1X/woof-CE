@@ -1,0 +1,43 @@
+#!/bin/sh
+#
+# * source this script
+#
+# gethome [inittab] [export]
+# gethome [fix]
+#
+# * get the proper $HOME directory
+#   also set $HOMEUSER
+#
+
+from_inittab() {
+	HOMEUSER="`grep '^tty1' /etc/inittab | tr -s ' ' | cut -f 3 -d ' '`"
+}
+
+if [ "$1" = "inittab" ] ; then
+	from_inittab
+	shift
+elif [ "$1" = "fix" ] ; then
+	from_inittab
+else
+	if [ -z "$HOME" -o "$HOME" = "/" ] ; then
+		from_inittab
+	fi
+fi
+
+if [ "$HOMEUSER" = "" ] ; then
+	HOMEUSER="${HOME##*/}" #basename $HOMEUSER
+else
+	#from the inittab
+	if [ "$HOMEUSER" = "root" ] ; then
+		HOME="/root"
+	else
+		HOME="/home/$HOMEUSER"
+	fi
+fi
+
+if [ "$1" = "export" -o "$1" = "fix" ] ; then
+	export HOME
+	export HOMEUSER
+fi
+
+### END ###

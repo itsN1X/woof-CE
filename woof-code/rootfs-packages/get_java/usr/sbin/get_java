@@ -760,7 +760,7 @@ function java_install_pet() {
 	  && [ -f ${TARGET_PATH}${TARGET_PACKAGE_FILE_NAME} ]; then
      if [ "$JAVA_ARCH" = "x64" -a "$DISTROARCH" = "64" ] \
        || [ "$JAVA_ARCH" != "x64" -a "$DISTROARCH" != "64" -o -d /lib32 ]; then
-	  INSTPETS="$(grep -o "^${JAVA_PACKAGE}-[^|]*" /root/.packages/user-installed-packages | tr '\n' ' ')"
+	  INSTPETS="$(grep -o "^${JAVA_PACKAGE}-[^|]*" /var/packages/user-installed-packages | tr '\n' ' ')"
 	  for ONEINSTPET in $INSTPETS; do
        petget -${ONEINSTPET}
        sync

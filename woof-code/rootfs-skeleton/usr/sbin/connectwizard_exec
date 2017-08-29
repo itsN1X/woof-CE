@@ -4,8 +4,8 @@
 #Exit code: normally 0, but 1 if new exec already running.
 
 NEWEXEC="$1"
-if [ -f /root/.connectwizardrc ];then
- . /root/.connectwizardrc #sets CURRENT_EXEC
+if [ -f $HOME/.connectwizardrc ];then
+ . $HOME/.connectwizardrc #sets CURRENT_EXEC
 else
  CURRENT_EXEC="`cat /usr/local/bin/defaultconnect | tail -n 1 | tr -s ' ' | cut -f 2 -d ' '`"
 fi
@@ -39,7 +39,7 @@ if [ "$NEWEXEC" != "$CURRENT_EXEC" ];then
  esac
  [ -n "$EXECPIDS" ] && kill $EXECPIDS
  echo "$CURRENT_EXEC" > /tmp/.connectwizard_previous_exec
- echo "CURRENT_EXEC=$NEWEXEC" > /root/.connectwizardrc #exit code is 0
+ echo "CURRENT_EXEC=$NEWEXEC" > $HOME/.connectwizardrc #exit code is 0
 else
  DUPEXECPIDS="$(ps --no-headers -fC "$NEWEXEC" | grep -wv "$$" | grep -wv "$PPID" | tr -s ' ' | cut -f 2 -d ' ' | tr '\n' ' ')"
  [ -z "$DUPEXECPIDS" ] #set exit code - 1 if duplicate

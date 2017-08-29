@@ -302,7 +302,7 @@ if [ "$MYBASE" = "quicksetup" ];then #120313 only allow in main quicksetup windo
 
     #120625 get time/date off internet...
     CHKBOXNTP=""
-    if [ "`cat /root/.packages/woof-installed-packages /root/.packages/user-installed-packages | grep '^[Pp]sync'`" != "" ];then
+    if [ "`cat /var/packages/woof-installed-packages /var/packages/user-installed-packages | grep '^[Pp]sync'`" != "" ];then
      DEFAULT_NTP='false'
      #[ -x $HOME/Startup/timesync.sh ] && DEFAULT_NTP='true' #created by psync package.
      [ -f /tmp/settertime ] && DEFAULT_NTP='true' #created by psync package.
@@ -416,8 +416,8 @@ fi
 if [ "$SET_COUNTRY" ];then
 
  #120402
- INSTLANGPACK="`grep '^langpack_' /root/.packages/woof-installed-packages | cut -f 2 -d '|'`"
- [ ! "$INSTLANGPACK" ] && [ -f /root/.packages/user-installed-packages ] && INSTLANGPACK="`grep '^langpack_' /root/.packages/user-installed-packages | cut -f 2 -d '|'`"
+ INSTLANGPACK="`grep '^langpack_' /var/packages/woof-installed-packages | cut -f 2 -d '|'`"
+ [ ! "$INSTLANGPACK" ] && [ -f /var/packages/user-installed-packages ] && INSTLANGPACK="`grep '^langpack_' /var/packages/user-installed-packages | cut -f 2 -d '|'`"
  [ ! "$INSTLANGPACK" ] && INSTLANGPACK="none"
 
  ###Choose locale###
@@ -1293,10 +1293,10 @@ if [ "$SET_LOCALE" ];then
    l12PTN="|langpack_${LANG12}|"
    if [ "$LANG1" != "en" ];then
     LANGFLAG='no'
-    [ "`grep "$l12PTN" /root/.packages/woof-installed-packages`" != "" ] && LANGFLAG='yes'
-    [ "`grep "$l12PTN" /root/.packages/user-installed-packages`" != "" ] && LANGFLAG='yes'
-    [ "`grep "$l1PTN" /root/.packages/woof-installed-packages`" != "" ] && LANGFLAG='yes'
-    [ "`grep "$l1PTN" /root/.packages/user-installed-packages`" != "" ] && LANGFLAG='yes'
+    [ "`grep "$l12PTN" /var/packages/woof-installed-packages`" != "" ] && LANGFLAG='yes'
+    [ "`grep "$l12PTN" /var/packages/user-installed-packages`" != "" ] && LANGFLAG='yes'
+    [ "`grep "$l1PTN" /var/packages/woof-installed-packages`" != "" ] && LANGFLAG='yes'
+    [ "`grep "$l1PTN" /var/packages/user-installed-packages`" != "" ] && LANGFLAG='yes'
     if [ "$LANGFLAG" = "no" ];then
 
      #check if a langpack available...
@@ -1367,8 +1367,8 @@ Note: Before downloading the langpack, you will have to make an Internet connect
      esac
      AVAILPACK=''
      AVAILMSG="$AVAILMSG2"
-     [ "`grep "$l12PTN" /root/.packages/Packages-puppy-noarch-official`" != "" ] && AVAILPACK="langpack_${LANG12}"
-     [ "`grep "$l1PTN" /root/.packages/Packages-puppy-noarch-official`" != "" ] && AVAILPACK="langpack_${LANG1}"
+     [ "`grep "$l12PTN" /var/packages/Packages-puppy-noarch-official`" != "" ] && AVAILPACK="langpack_${LANG12}"
+     [ "`grep "$l1PTN" /var/packages/Packages-puppy-noarch-official`" != "" ] && AVAILPACK="langpack_${LANG1}"
      [ "$AVAILPACK" ] && AVAILMSG="$AVAILMSG1"
      if [ "$DISPLAY" ];then
       [ $wPID -ne 0 ] && kill $wPID #120524

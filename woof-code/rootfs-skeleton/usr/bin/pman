@@ -203,7 +203,7 @@ fi
 
 #w464 search pkg homepages db...
 pPATTERN='^'"${NAME}"' '
-HOMESITE="`grep -i "$pPATTERN" /root/.packages/PKGS_HOMEPAGES | head -n 1 | cut -f 2 -d ' '`"
+HOMESITE="`grep -i "$pPATTERN" /var/packages/PKGS_HOMEPAGES | head -n 1 | cut -f 2 -d ' '`"
 if [ "$SECTION" = "" -a "$HOMESITE" != "" ];then
  exec $HTMLVIEWER $HOMESITE
 fi

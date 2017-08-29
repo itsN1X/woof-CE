@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#set -x ; mkdir -p /root/LOGs; NAME=$(basename "$0"); exec 1>> /root/LOGs/"$NAME".log 2>&1
+#set -x ; mkdir -p $HOME/LOGs; NAME=$(basename "$0"); exec 1>> $HOME/LOGs/"$NAME".log 2>&1
 
 export TEXTDOMAIN=petget___pkg_chooser.sh
 export OUTPUT_CHARSET=UTF-8

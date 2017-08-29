@@ -5,12 +5,12 @@
 #of files in the live-CD.
 #this script works for all puppies built with Woof.
 
-. /root/.packages/DISTRO_PKGS_SPECS
+. /var/packages/DISTRO_PKGS_SPECS
 
 DEVXONLY="`echo "$PKGS_SPECS_TABLE" | grep 'exe>dev' | grep '^yes' | cut -f 2 -d '|'`"
 
-# cat /root/.packages/woof-installed-packages |
-cp -f /root/.packages/woof-installed-packages /tmp/woof-installed-packages
+# cat /var/packages/woof-installed-packages |
+cp -f /var/packages/woof-installed-packages /tmp/woof-installed-packages
 for ONEDEVX in $DEVXONLY
 do
  dPATTERN="|${ONEDEVX}|"

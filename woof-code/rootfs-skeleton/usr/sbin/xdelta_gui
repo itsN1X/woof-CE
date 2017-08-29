@@ -27,7 +27,7 @@ old_find_func () {
  #needs OLDFILENAME, sets SOURCEFILE_OLD.
 	 /usr/lib/gtkdialog/box_splash -close never -text "$(gettext 'Please wait, searching for old file...')" &
 	 XPID=$!
-	 SOURCEFILE_OLD="`find /root -maxdepth 4 -type f -name ${OLDFILENAME} | head -n 1`"
+	 SOURCEFILE_OLD="`find $HOME -maxdepth 4 -type f -name ${OLDFILENAME} | head -n 1`"
 	 if [ "$SOURCEFILE_OLD" = "" ];then
 	  for ONEMNTD in `mount | grep '^/dev/sd[a-z]' | cut -f 3 -d ' ' | tr '\n' ' '`
 	  do
@@ -296,7 +296,7 @@ else
  DIR_NEW="`dirname "$SOURCEFILE_NEW"`"
  #check that it's writable (they could be archived on cd/dvd)...
  touch ${DIR_NEW}/verytempfilehere
- [ $? -ne 0 ] && DIR_NEW='/root'
+ [ $? -ne 0 ] && DIR_NEW=$HOME
  [ -f ${DIR_NEW}/verytempfilehere ] && rm -f ${DIR_NEW}/verytempfilehere
  #100131 default to using '___' instead of ':'...
  SOURCEFILE_DELTA="${DIR_NEW}/${BASE_OLD}___${BASE_NEW}.delta"

@@ -17,8 +17,8 @@
 #170724 accommodate absence of a current exec, for default eth0.
 
 CURRENT_EXEC='' #170724
-if [ -f /root/.connectwizardrc ];then #170724
- . /root/.connectwizardrc #sets CURRENT_EXEC 170329...
+if [ -f $HOME/.connectwizardrc ];then #170724
+ . $HOME/.connectwizardrc #sets CURRENT_EXEC 170329...
 fi #170724
 
 ARGUMENT="$1"

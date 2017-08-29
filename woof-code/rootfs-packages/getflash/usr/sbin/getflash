@@ -443,12 +443,12 @@ function UpdateFlashNow (){
          find /usr/lib${lsuffix}/mozilla/plugins/usr -type f -printf '/usr/%P\n'  >> /tmp/flashplayer.files
          cd $HOME
          rm -rf /usr/lib${lsuffix}/mozilla/plugins/usr
-         grep -vw "^flashplayer-$NEWVERSION-$INSTRUCTION_SET" $HOME/.packages/user-installed-packages > /tmp/user-installed-packages
+         grep -vw "^flashplayer-$NEWVERSION-$INSTRUCTION_SET" /var/packages/user-installed-packages > /tmp/user-installed-packages
          NEWENTRY="flashplayer-$NEWVERSION-$INSTRUCTION_SET|flashplayer|$NEWVERSION-$INSTRUCTION_SET||Internet|${LENGTH}K||flashplayer-$NEWVERSION-$INSTRUCTION_SET.pet||Adobe Flash Player browser plugin and Preferences||||"
          echo "$NEWENTRY" >> /tmp/user-installed-packages
          PACKAGE_ROOT=flashplayer-$NEWVERSION-$INSTRUCTION_SET	#v1.0
          mv -f /tmp/flashplayer.files /tmp/$PACKAGE_ROOT.files
-         cp -f /tmp/$PACKAGE_ROOT.files /tmp/user-installed-packages $HOME/.packages/
+         cp -f /tmp/$PACKAGE_ROOT.files /tmp/user-installed-packages /var/packages/
          if [ -f /usr/share/applications/flash-player-properties.desktop ];then #fix .desktop for menu
           OLDNAME="`grep "^Name=" /usr/share/applications/flash-player-properties.desktop`"
           OLDCATEGORY="`grep "^Categories" /usr/share/applications/flash-player-properties.desktop`"
@@ -494,14 +494,14 @@ function UpdateFlashNow (){
          #cd $HOME #V1.2 fix download pets
          if [ -s "$PACKAGE_ROOT.pet" ]; then
            petget +$PACKAGE_ROOT.pet
-           [ -s $HOME/.packages/$PACKAGE_ROOT.files ] && SUCCESS="y"
+           [ -s /var/packages/$PACKAGE_ROOT.files ] && SUCCESS="y"
            rm -f $PACKAGE_ROOT.pet
          fi
       fi
       if [ "$SUCCESS" ]; then
         #http://flashblock.mozdev.org/
         #LANG=C Xdialog --center --title "Adobe Flash Player" --icon "/usr/share/doc/flashlogo.gif" --msgbox "The Adobe Flash Player has been downloaded to:\\n /usr/lib/mozilla/plugins/libflashplayer.so\\nYou will need to exit from your web browser and restart it for the player to load" 0 0
-        NOFB="`grep -i '^flashblock' $HOME/.packages/*-installed-packages`"
+        NOFB="`grep -i '^flashblock' /var/packages/*-installed-packages`"
         if [ "$OFFERFB" -a "$NOFB" = "" ];then
          FLASHBLOCK='<hbox>
             <pixmap><input file>/usr/share/icons/flashblock.png</input></pixmap>

@@ -3,7 +3,7 @@
 #2009 Lesser GPL licence v2 (http://www.fsf.org/licensing/licenses/lgpl.html).
 #called from pkg_chooser.sh and petget.
 #package to be removed is TREE2, ex TREE2=abiword-1.2.3 (corrresponds to 'pkgname' field in db).
-#installed pkgs are recorded in /root/.packages/user-installed-packages, each
+#installed pkgs are recorded in /var/packages/user-installed-packages, each
 #line a standardised database entry:
 #pkgname|nameonly|version|pkgrelease|category|size|path|fullfilename|dependencies|description|
 #optionally on the end: compileddistro|compiledrelease|repo| (fields 11,12,13)
@@ -29,12 +29,12 @@ export OUTPUT_CHARSET=UTF-8
 [ "$(locale | grep '^LANG=' | cut -d '=' -f 2)" ] && ORIGLANG="$(locale | grep '^LANG=' | cut -d '=' -f 2)"
 . /etc/rc.d/PUPSTATE  #111228 this has PUPMODE and SAVE_LAYER.
 . /etc/DISTRO_SPECS #has DISTRO_BINARY_COMPAT, DISTRO_COMPAT_VERSION
-. /root/.packages/DISTRO_PKGS_SPECS
+. /var/packages/DISTRO_PKGS_SPECS
 
 DB_pkgname="$TREE2"
 
 #v424 info box, nothing yet installed...
-if [ "$DB_pkgname" = "" -a "`cat /root/.packages/user-installed-packages`" = "" ];then #fix for ziggi
+if [ "$DB_pkgname" = "" -a "`cat /var/packages/user-installed-packages`" = "" ];then #fix for ziggi
  /usr/lib/gtkdialog/box_ok "$(gettext 'Puppy Package Manager')" error "$(gettext 'There are no user-installed packages yet, so nothing to uninstall!')"
  exit 0
 fi
@@ -58,9 +58,9 @@ if [ $PUPMODE -eq 3 -o $PUPMODE -eq 7 -o $PUPMODE -eq 13 ];then
   done
 fi
 
-if [ -f /root/.packages/${DB_pkgname}.files ];then
+if [ -f /var/packages/${DB_pkgname}.files ];then
  if [ "$PUP_LAYER" = '/pup_ro2' ]; then #120103 shinobar.
-  cat /root/.packages/${DB_pkgname}.files |
+  cat /var/packages/${DB_pkgname}.files |
   while read ONESPEC
   do
    if [ ! -d "$ONESPEC" ];then
@@ -91,7 +91,7 @@ if [ -f /root/.packages/${DB_pkgname}.files ];then
   done
  fi
  #do it again, looking for empty directories...
- cat /root/.packages/${DB_pkgname}.files |
+ cat /var/packages/${DB_pkgname}.files |
  while read ONESPEC
  do
   if [ -d "$ONESPEC" ];then
@@ -101,7 +101,7 @@ if [ -f /root/.packages/${DB_pkgname}.files ];then
  ###+++2011-12-27 KRG
 else
  firstchar=`echo ${DB_pkgname} | cut -c 1`
- possiblePKGS=`find /root/.packages -type f -iname "$firstchar*.files"`
+ possiblePKGS=`find /var/packages -type f -iname "$firstchar*.files"`
  possible5=`echo "$possiblePKGS" | head -n5`
  count=`echo "$possiblePKGS" | wc -l`
  [ ! "$count" ] && count=0
@@ -114,14 +114,14 @@ $(gettext 'The first 5 are')
 $possible5"
  fi
  if [ "$DISPLAY" ];then
-  /usr/lib/gtkdialog/box_ok "$(gettext 'Puppy package manager')" warning "<b>$(gettext 'No file named') ${DB_pkgname}.files $(gettext 'found in') /root/.packages/ $(gettext 'folder.')</b>" "$0 $(gettext 'refusing cowardly to remove the package.')" " " "<b>$(gettext 'Possible suggestions:')</b> $WARNMSG" "<b>$(gettext 'Possible solution:')</b> $(gettext 'Edit') <i>/root/.packages/user-installed-packages</i> $(gettext 'to match the pkgname') $(gettext 'and start again.')"
-  rox /root/.packages
-  geany /root/.packages/user-installed-packages
+  /usr/lib/gtkdialog/box_ok "$(gettext 'Puppy package manager')" warning "<b>$(gettext 'No file named') ${DB_pkgname}.files $(gettext 'found in') /var/packages/ $(gettext 'folder.')</b>" "$0 $(gettext 'refusing cowardly to remove the package.')" " " "<b>$(gettext 'Possible suggestions:')</b> $WARNMSG" "<b>$(gettext 'Possible solution:')</b> $(gettext 'Edit') <i>/var/packages/user-installed-packages</i> $(gettext 'to match the pkgname') $(gettext 'and start again.')"
+  rox /var/packages
+  geany /var/packages/user-installed-packages
   exit 101
   ###+++2011-12-27 KRG
  else
-  dialog --msgbox "$(gettext 'No file named ' ) ${DB_pkgname}.files $(gettext ' found. Refusing cowardly to remove the package. Possible solution: Edit /root/.packages/user-installed-packages and start again.')" 0 0
-  mp /root/.packages/user-installed-packages
+  dialog --msgbox "$(gettext 'No file named ' ) ${DB_pkgname}.files $(gettext ' found. Refusing cowardly to remove the package. Possible solution: Edit /var/packages/user-installed-packages and start again.')" 0 0
+  mp /var/packages/user-installed-packages
   exit 101
  fi
 fi
@@ -130,7 +130,7 @@ fi
 if [ "$PUPMODE" = "2" ]; then
 #any user-installed deps?...
 remPATTERN='^'"$DB_pkgname"'|'
-DEP_PKGS="`grep "$remPATTERN" /root/.packages/user-installed-packages | cut -f 9 -d '|' | tr ',' '\n' | grep -v '^\\-' | sed -e 's%^+%%' |cut -f1 -d '&'`" #names-only, one each line. 
+DEP_PKGS="`grep "$remPATTERN" /var/packages/user-installed-packages | cut -f 9 -d '|' | tr ',' '\n' | grep -v '^\\-' | sed -e 's%^+%%' |cut -f1 -d '&'`" #names-only, one each line. 
 
 #131222 do not uninstall if other-installed depend on it...
 echo -n '' > /tmp/petget/other-installed-deps
@@ -138,7 +138,7 @@ for ADEP in $DEP_PKGS
 do
  if [ "$(grep ${ADEP} /tmp/pkgs_to_remove)" = "" ]; then
   PTN2="|${ADEP}|"
-  DEPPKG="$(grep "$PTN2" /root/.packages/user-installed-packages | cut -f 1 -d '|')"
+  DEPPKG="$(grep "$PTN2" /var/packages/user-installed-packages | cut -f 1 -d '|')"
   [ "$DEPPKG" ] && echo "$DEPPKG" >> /tmp/petget/other-installed-deps
  else
   echo "go on"
@@ -156,8 +156,8 @@ REMLIST="${DB_pkgname}"
 mkdir -p /tmp/petget
 echo -n "" > /tmp/petget/FILECLASHES
 echo -n "" > /tmp/petget/CLASHPKGS
-grep -v '/$' /root/.packages/${DB_pkgname}.files > /tmp/petget/${DB_pkgname}.filesFILESONLY #/ on end, it is a directory entry.
-LATERINSTALLED="$(cat /root/.packages/user-installed-packages | cut -f 1 -d '|' | tr '\n' ' ' | grep -o " ${DB_pkgname} .*" | cut -f 3- -d ' ')"
+grep -v '/$' /var/packages/${DB_pkgname}.files > /tmp/petget/${DB_pkgname}.filesFILESONLY #/ on end, it is a directory entry.
+LATERINSTALLED="$(cat /var/packages/user-installed-packages | cut -f 1 -d '|' | tr '\n' ' ' | grep -o " ${DB_pkgname} .*" | cut -f 3- -d ' ')"
 for ALATERPKG in $LATERINSTALLED
 do
  if [ -f /audit/${ALATERPKG}DEPOSED.sfs ];then
@@ -193,9 +193,9 @@ fi
 #131230 from here down, use busybox applets only...
 export LANG=C
 #delete files...
-busybox cat /root/.packages/${DB_pkgname}.files | busybox grep -v '/$' | busybox xargs busybox rm -f #/ on end, it is a directory entry.
+busybox cat /var/packages/${DB_pkgname}.files | busybox grep -v '/$' | busybox xargs busybox rm -f #/ on end, it is a directory entry.
 #do it again, looking for empty directories...
-busybox cat /root/.packages/${DB_pkgname}.files |
+busybox cat /var/packages/${DB_pkgname}.files |
 while read ONESPEC
 do
  if [ -d "$ONESPEC" ];then
@@ -307,8 +307,8 @@ if [ "$UPDATE_MENUS" = "yes" ]; then
 # /usr/sbin/indexgen.sh #${WKGDIR}/${APKGNAME}
 
  #110706 update menu if .desktop file exists...
- if [ -f /root/.packages/${DB_pkgname}.files ];then
-  if [ "`grep '\.desktop$' /root/.packages/${DB_pkgname}.files`" != "" ];then
+ if [ -f /var/packages/${DB_pkgname}.files ];then
+  if [ "`grep '\.desktop$' /var/packages/${DB_pkgname}.files`" != "" ];then
    #Reconstruct configuration files for JWM, Fvwm95, IceWM...
    nohup /usr/sbin/fixmenus
    [ "`pidof jwm`" != "" ] && { jwm -reload || jwm -restart ; }
@@ -319,18 +319,18 @@ fi
 #what about any user-installed deps...
 remPATTERN='^'"$DB_pkgname"'|'
 #110211 shinobar: was the dependency logic inverted...
-DEP_PKGS="`grep "$remPATTERN" /root/.packages/user-installed-packages | cut -f 9 -d '|' | tr ',' '\n' | grep -v '^\\-' | sed -e 's%^+%%' | cut -f1 -d '&'`"
+DEP_PKGS="`grep "$remPATTERN" /var/packages/user-installed-packages | cut -f 9 -d '|' | tr ',' '\n' | grep -v '^\\-' | sed -e 's%^+%%' | cut -f1 -d '&'`"
 #remove records of pkg...
-rm -f /root/.packages/${DB_pkgname}.files
-grep -v "$remPATTERN" /root/.packages/user-installed-packages > /tmp/petget-user-installed-pkgs-rem
-cp -f /tmp/petget-user-installed-pkgs-rem /root/.packages/user-installed-packages
+rm -f /var/packages/${DB_pkgname}.files
+grep -v "$remPATTERN" /var/packages/user-installed-packages > /tmp/petget-user-installed-pkgs-rem
+cp -f /tmp/petget-user-installed-pkgs-rem /var/packages/user-installed-packages
 
 #v424 .pet pckage may have post-uninstall script, which was originally named puninstall.sh
-#but /usr/local/petget/installpkg.sh moved it to /root/.packages/$DB_pkgname.remove
-if [ -f /root/.packages/${DB_pkgname}.remove ];then
- nohup /bin/sh /root/.packages/${DB_pkgname}.remove &
+#but /usr/local/petget/installpkg.sh moved it to /var/packages/$DB_pkgname.remove
+if [ -f /var/packages/${DB_pkgname}.remove ];then
+ nohup /bin/sh /var/packages/${DB_pkgname}.remove &
  sleep 0.2
- rm -f /root/.packages/${DB_pkgname}.remove
+ rm -f /var/packages/${DB_pkgname}.remove
 fi
 
 #remove temp file so main gui window will re-filter pkgs display...
@@ -342,7 +342,7 @@ rm -f /tmp/petget_fltrd_repo_?${FIRSTCHAR}* 2>/dev/null
 #announce any deps that might be removable...
 echo -n "" > /tmp/petget-deps-maybe-rem
 echo -n "" > /tmp/petget-deps-maybe-remove
-cut -f 1,2,10 -d '|' /root/.packages/user-installed-packages |
+cut -f 1,2,10 -d '|' /var/packages/user-installed-packages |
 while read ONEDB
 do
  ONE_pkgname="`echo -n "$ONEDB" | cut -f 1 -d '|'`"

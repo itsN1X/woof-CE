@@ -6,7 +6,7 @@ SETDEFAULT='no'
 
 if [ "$PWD" = "/" ];then #installing in a running puppy.
 
- if [ "`cat /root/.packages/woof-installed-packages /root/.packages/user-installed-packages | grep 'gecko\-mediaplayer'`" = "" ];then
+ if [ "`cat /var/packages/woof-installed-packages /var/packages/user-installed-packages | grep 'gecko\-mediaplayer'`" = "" ];then
   EXTRAMSG="<text>
       <label>Note: It is highly recommended that you also install Gecko-mediaplayer, a web browser plugin. These two applications are designed to work together.</label>
     </text>"

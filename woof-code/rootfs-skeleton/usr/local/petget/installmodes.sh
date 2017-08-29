@@ -5,8 +5,8 @@ export OUTPUT_CHARSET=UTF-8
 
 [ "`whoami`" != "root" ] && exec sudo -A ${0} ${@} #110505
 
-if [ -f /root/.packages/download_path ]; then
- . /root/.packages/download_path
+if [ -f /var/packages/download_path ]; then
+ . /var/packages/download_path
 fi
 
 clean_up () {
@@ -56,8 +56,8 @@ report_results () {
   [ "$(echo $LINE)" = "" ] && continue
   if [ -f /tmp/download_pets_quietly -o -f /tmp/download_only_pet_quietly \
    -o -f /tmp/manual_pkg_download ];then
-   if [ -f /root/.packages/download_path ];then
-    . /root/.packages/download_path
+   if [ -f /var/packages/download_path ];then
+    . /var/packages/download_path
     DOWN_PATH="$DL_PATH"
    else
     DOWN_PATH=$HOME
@@ -200,7 +200,7 @@ check_total_size () {
  ACTION_MSG=$(gettext 'This is not enough space to download and install the packages (including dependencies) you have selected.')
  if [ -f /tmp/download_pets_quietly -o -f /tmp/download_only_pet_quietly ]; then
   NEEDEDK=$( expr $NEEDEDK / 3 ) # 0.5x
-  [ "$DL_PATH" ] && DOWN_PATH="$DL_PATH" || DOWN_PATH="/root"
+  [ "$DL_PATH" ] && DOWN_PATH="$DL_PATH" || DOWN_PATH="$HOME"
   ACTION_MSG="$(gettext 'This is not enough space to download the packages (including dependencies) you have selected in ')${DOWN_PATH}."
  fi
  if [ "$(cat /var/local/petget/nd_category 2>/dev/null)" = "true" ]; then
@@ -235,7 +235,7 @@ check_total_size () {
  else
   AVAILABLE=$(cat /tmp/pup_event_sizefreem | head -n 1 )
  fi
- if [ "$DL_PATH" -a ! "$DL_PATH" = "/root" ]; then
+ if [ "$DL_PATH" -a ! "$DL_PATH" = "$HOME" ]; then
   if [ -f /tmp/download_pets_quietly -o -f /tmp/download_only_pet_quietly \
    -o "$(cat /var/local/petget/nd_category 2>/dev/null)" = "true" ]; then
    SAVEAVAILABLE=$(df -m "$DL_PATH"| awk 'END {print $4}')
@@ -359,14 +359,14 @@ install_package () {
  rm -f /tmp/overall_package_status_log
  echo 0 > /tmp/petget/install_status_percent
  echo "$(gettext "Calculating total required space...")" > /tmp/petget/install_status
- [ ! -f /root/.packages/skip_space_check ] && check_total_size
+ [ ! -f /var/packages/skip_space_check ] && check_total_size
  status_bar_func &
  while read LINE; do
    REPO=$(echo $LINE | cut -f 2 -d '|')
    echo "$REPO" > /tmp/petget/current-repo-triad
    TREE1=$(echo $LINE | cut -f 1 -d '|')
    if [ -f /tmp/install_quietly ];then
-    if [  "$(grep $TREE1 /root/.packages/user-installed-packages 2>/dev/null)" = "" \
+    if [  "$(grep $TREE1 /var/packages/user-installed-packages 2>/dev/null)" = "" \
      -a -f /tmp/install_pets_quietly ]; then
      if [ "$(cat /var/local/petget/nt_category 2>/dev/null)" = "true" ]; then
      /usr/local/petget/installpreview.sh

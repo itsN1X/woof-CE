@@ -280,7 +280,7 @@ else
 	FREEM=`df -m | grep ' /tmp$' | tr -s ' ' | cut -f 4 -d ' '`
 	[ ! $FREEM ] && FREEM=0
 	if [ $FREEM -lt 300 ];then
-	  WKGPATH="/root"
+	  WKGPATH="$HOME"
 	  FREEM=`df -m | grep ' /$' | tr -s ' ' | cut -f 4 -d ' '`
 	  if [ $FREEM -lt 300 ];then
 	    WKGPATH="`readlink /mnt/home`"
@@ -383,7 +383,7 @@ fi
  "$(gettext 'Now, if you wish, you may install Puppy Linux on the drive. If you decline, it can be done later using the Puppy Universal Installer. If you choose to install Puppy now, you must have a Puppy live-CD .iso file available locally (that you had previously downloaded)')"
 [ $? -ne 0 ] && exit
 
-cd /root
+cd $HOME
 SRCFPATH="`Xdialog --wrap --wmclass "gtkdialog2" --left --backtitle "$(gettext "Please select a Puppy live-CD .iso file, then click 'OK':")" --title "$(gettext 'BootFlash: Choose .iso')" --stdout --no-buttons --no-cancel --fselect "*.iso" 0 0`"
 [ $? -ne 0 ] && exit
 

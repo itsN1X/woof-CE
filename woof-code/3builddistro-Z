@@ -305,7 +305,7 @@ if [ "$(echo $ADRV_INC)" != "" -o "$(echo $FDRV_INC)" != "" -o "$(echo $YDRV_INC
 		[ "$dtype" = 'a' -a -z "$ADRV_INC" ] && continue
 		[ "$dtype" = 'f' ] && continue #don't bother with fdrv
 		[ "$dtype" = 'y' -a -z "$YDRV_INC" ] && break
-		mkdir -p sandbox3/${dtype}drv/root/.packages/
+		mkdir -p sandbox3/${dtype}drv/var/packages/
 		[ -f /tmp/${dtype}-woof-packages ] && rm /tmp/${dtype}-woof-packages
 		while read -r line
 		do 
@@ -316,7 +316,7 @@ if [ "$(echo $ADRV_INC)" != "" -o "$(echo $FDRV_INC)" != "" -o "$(echo $YDRV_INC
 				echo "$line" >> /tmp/${dtype}-woof-packages
 			fi
 		done < woof-installed-packages
-		cat woof-installed-packages > sandbox3/${dtype}drv/root/.packages/woof-installed-packages
+		cat woof-installed-packages > sandbox3/${dtype}drv/var/packages/woof-installed-packages
 		cat /tmp/${dtype}-woof-packages > woof-installed-packages
 		fcnt=$(($fcnt + 1))
 	done
@@ -806,43 +806,43 @@ else
 fi
 
 #get info about the ubuntu pkgs...
-echo "Updating pkg data in rootfs-complete/root/.packages ..."
+echo "Updating pkg data in rootfs-complete/var/packages ..."
 #copy them into the live-cd also...
 #in case of Ppup4, PKGLISTS_COMPAT='Packages-puppy-4xx-official'
 for ONELIST in $PKGLISTS_COMPAT
 do
  cp -f ../$ONELIST ./
- cp -f ../$ONELIST rootfs-complete/root/.packages/
+ cp -f ../$ONELIST rootfs-complete/var/packages/
 done
 
 for ONELIST in $PACKAGELISTS_PET_ORDER #120506
 do
  cp -f ../$ONELIST ./
- cp -f ../$ONELIST rootfs-complete/root/.packages/
+ cp -f ../$ONELIST rootfs-complete/var/packages/
 done
 
 #also copy the pet package databases...
-cp -f ../Packages-puppy-[0-9]-official rootfs-complete/root/.packages/ 2>/dev/null
-cp -f ../Packages-puppy-common-official rootfs-complete/root/.packages/ 2>/dev/null #110608
-cp -f ../Packages-puppy-noarch-official rootfs-complete/root/.packages/ #120305
+cp -f ../Packages-puppy-[0-9]-official rootfs-complete/var/packages/ 2>/dev/null
+cp -f ../Packages-puppy-common-official rootfs-complete/var/packages/ 2>/dev/null #110608
+cp -f ../Packages-puppy-noarch-official rootfs-complete/var/packages/ #120305
 
 if [ -f ../Packages-puppy-${DISTRO_DB_SUBNAME}-official ];then #110723 ex: Packages-puppy-drake-official
- cp -f ../Packages-puppy-${DISTRO_DB_SUBNAME}-official rootfs-complete/root/.packages/
+ cp -f ../Packages-puppy-${DISTRO_DB_SUBNAME}-official rootfs-complete/var/packages/
  cp -f ../Packages-puppy-${DISTRO_DB_SUBNAME}-official ./
  ../support/rationalize_categories Packages-puppy-${DISTRO_DB_SUBNAME}-official
- cp -f /tmp/rationalized_categories rootfs-complete/root/.packages/Packages-puppy-${DISTRO_DB_SUBNAME}-official
+ cp -f /tmp/rationalized_categories rootfs-complete/var/packages/Packages-puppy-${DISTRO_DB_SUBNAME}-official
 fi
 if [ -f Packages-puppy-wary5-official ];then
  ../support/rationalize_categories Packages-puppy-wary5-official
- cp -f /tmp/rationalized_categories rootfs-complete/root/.packages/Packages-puppy-wary5-official
+ cp -f /tmp/rationalized_categories rootfs-complete/var/packages/Packages-puppy-wary5-official
 fi
 
 #also copy this...
-cp -f ../PKGS_MANAGEMENT rootfs-complete/root/.packages/
+cp -f ../PKGS_MANAGEMENT rootfs-complete/var/packages/
 
 #477 a puppy-puppy build will not have any compat-distro databases...
 petcntlimit=3
-COMPATDISTRO_DB_FILES="`ls -1 rootfs-complete/root/.packages/Packages-[^p]* 2>/dev/null`"
+COMPATDISTRO_DB_FILES="`ls -1 rootfs-complete/var/packages/Packages-[^p]* 2>/dev/null`"
 [ "$COMPATDISTRO_DB_FILES" = "" ] && petcntlimit=5
 
 #w476 swap to make sure 3 pet repos get chosen...
@@ -857,7 +857,7 @@ case $DISTRO_FILE_PREFIX in  #110906 fix. $DISTRO_COMPAT_VERSION in #100911
   dpup) enabledrepos="Packages-puppy-dpup-official Packages-puppy-noarch-official " ;;
   *)
    #add the puppy repos... (i want 5, 4, 3)...
-   for ONEREPO in `ls -1 rootfs-complete/root/.packages/Packages-puppy* | sort -r`
+   for ONEREPO in `ls -1 rootfs-complete/var/packages/Packages-puppy* | sort -r`
    do
     [ $repocnt -gt $petcntlimit ] && break #limit of 3 puppy repos.
     BASEREPO=${ONEREPO##*/} #basename $ONEREPO
@@ -873,7 +873,7 @@ esac
 
 #add compat-distro repos...
 if [ "$COMPATDISTRO_DB_FILES" != "" ];then
-  for ONEREPO in `ls -1 rootfs-complete/root/.packages/Packages-[^p]*`
+  for ONEREPO in `ls -1 rootfs-complete/var/packages/Packages-[^p]*`
   do
    [ $repocnt -gt 5 ] && break #only allow 5 active repos in PPM.
    BASEREPO="`basename $ONEREPO`"
@@ -886,20 +886,20 @@ fi
 case $DISTRO_BINARY_COMPAT in
  ubuntu|trisquel)
   xPUPPYREPOS="Packages-puppy-${DISTRO_DB_SUBNAME}-official Packages-puppy-noarch-official" #Packages-puppy-common-official 
-  xCOMPATREPOS="$(ls -1 rootfs-complete/root/.packages/Packages-[^p]* | grep -E '\-main$|\-universe$|\-multiverse$' | rev | cut -f 1 -d '/' | rev | tr '\n' ' ')"
+  xCOMPATREPOS="$(ls -1 rootfs-complete/var/packages/Packages-[^p]* | grep -E '\-main$|\-universe$|\-multiverse$' | rev | cut -f 1 -d '/' | rev | tr '\n' ' ')"
   #130330 would like universe first...
-  xCOMPATREPOS1="$(ls -1 rootfs-complete/root/.packages/Packages-[^p]* | grep -E '\-universe$' | rev | cut -f 1 -d '/' | rev | tr '\n' ' ')"
-  xCOMPATREPOS2="$(ls -1 rootfs-complete/root/.packages/Packages-[^p]* | grep -E '\-main$|\-multiverse$' | rev | cut -f 1 -d '/' | rev | tr '\n' ' ')"
+  xCOMPATREPOS1="$(ls -1 rootfs-complete/var/packages/Packages-[^p]* | grep -E '\-universe$' | rev | cut -f 1 -d '/' | rev | tr '\n' ' ')"
+  xCOMPATREPOS2="$(ls -1 rootfs-complete/var/packages/Packages-[^p]* | grep -E '\-main$|\-multiverse$' | rev | cut -f 1 -d '/' | rev | tr '\n' ' ')"
   enabledrepos=" ${xCOMPATREPOS1} ${xCOMPATREPOS2} ${xPUPPYREPOS} "
  ;;
 esac
 
-echo "PKG_REPOS_ENABLED='${enabledrepos}'" >> rootfs-complete/root/.packages/PKGS_MANAGEMENT
+echo "PKG_REPOS_ENABLED='${enabledrepos}'" >> rootfs-complete/var/packages/PKGS_MANAGEMENT
 
-cp -f ../${DPSFILE} rootfs-complete/root/.packages/DISTRO_PKGS_SPECS   # _00func
-cp -f ../${DCRFILE} rootfs-complete/root/.packages/DISTRO_COMPAT_REPOS # _00func
-cp -f ../DISTRO_PET_REPOS rootfs-complete/root/.packages/
-cp -f ../PKGS_HOMEPAGES rootfs-complete/root/.packages/
+cp -f ../${DPSFILE} rootfs-complete/var/packages/DISTRO_PKGS_SPECS   # _00func
+cp -f ../${DCRFILE} rootfs-complete/var/packages/DISTRO_COMPAT_REPOS # _00func
+cp -f ../DISTRO_PET_REPOS rootfs-complete/var/packages/
+cp -f ../PKGS_HOMEPAGES rootfs-complete/var/packages/
 #this needed to update pkg db's in a running puppy...
 cp -f ../0setup rootfs-complete/usr/local/petget/
 
@@ -923,15 +923,15 @@ esac
 [ -f ../invaliddepslist ] && cp -f ../invaliddepslist rootfs-complete/usr/local/petget/
 
 #findwoofinstalledpkgs creates 'woof-installed-packages'
-cp ../woof-installed-packages rootfs-complete/root/.packages/ #already created earlier
+cp ../woof-installed-packages rootfs-complete/var/packages/ #already created earlier
 touch ../devx-only-installed-packages #121028
-cp ../devx-only-installed-packages rootfs-complete/root/.packages/ #121028
+cp ../devx-only-installed-packages rootfs-complete/var/packages/ #121028
 
 #110722 add kernel db line...
-echo "$KERNEL_DB_ENTRY" >> rootfs-complete/root/.packages/woof-installed-packages
+echo "$KERNEL_DB_ENTRY" >> rootfs-complete/var/packages/woof-installed-packages
 #sort alphabetically...
-sort --key=1 --field-separator="|" rootfs-complete/root/.packages/woof-installed-packages > /tmp/petget_woof-installed-packages
-mv -f /tmp/petget_woof-installed-packages rootfs-complete/root/.packages/woof-installed-packages
+sort --key=1 --field-separator="|" rootfs-complete/var/packages/woof-installed-packages > /tmp/petget_woof-installed-packages
+mv -f /tmp/petget_woof-installed-packages rootfs-complete/var/packages/woof-installed-packages
 
 #120628 certain utilities are not appropriate when booting on an arm board...
 if [ "$SDFLAG" != "" ];then
@@ -951,7 +951,7 @@ fi
 #130618 restore the "layer:" lines in /etc/xdg/templates/_root_.jwmrc...
 #note, this file is now in Woof, I took it out of the JWM pet.
 JWMFLG=0
-JWM3=`grep -E '^jwm[_-][0-9]' rootfs-complete/root/.packages/woof-installed-packages | cut -f 3 -d '|' | cut -c 1-3 | head -n 1`
+JWM3=`grep -E '^jwm[_-][0-9]' rootfs-complete/var/packages/woof-installed-packages | cut -f 3 -d '|' | cut -c 1-3 | head -n 1`
 [ ! $JWM3 ] && JWMFLG=1 #assume too old. note, there is a jwm2 pet, which is older version.
 if vercmp $JWM3 ge 2.2; then JWMFLG=2; fi
 if vercmp $JWM3 ge 790; then JWMFLG=2; fi
@@ -1270,7 +1270,7 @@ do
    sort > /tmp/0builtin_files_${DISTRO_FILE_PREFIX}-${DISTRO_VERSION}/${ONEGENNAME}.files
  sync
  #store the information more efficiently...
- mkdir -p 0builtin_files_${DISTRO_FILE_PREFIX}-${DISTRO_VERSION}/root/.packages/builtin_files
+ mkdir -p 0builtin_files_${DISTRO_FILE_PREFIX}-${DISTRO_VERSION}/var/packages/builtin_files
  (
  PREVPATH=''; PREVPATH0=''
  while read ONELINE ; do
@@ -1298,7 +1298,7 @@ do
    fi
   fi
  done < /tmp/0builtin_files_${DISTRO_FILE_PREFIX}-${DISTRO_VERSION}/${ONEGENNAME}.files
- ) > 0builtin_files_${DISTRO_FILE_PREFIX}-${DISTRO_VERSION}/root/.packages/builtin_files/${ONEGENNAME}
+ ) > 0builtin_files_${DISTRO_FILE_PREFIX}-${DISTRO_VERSION}/var/packages/builtin_files/${ONEGENNAME}
 done
 
 # do the same for rootfs-packages
@@ -1309,7 +1309,7 @@ if [ -f /tmp/rootfs-packages.specs ];then
 		ogPATTERN="s%^\\.\\./rootfs-packages/${PKGL}/%/%"
 		find ../rootfs-packages/$PKGL | sed -e "$ogPATTERN" | sort > /tmp/0builtin_files_${DISTRO_FILE_PREFIX}-${DISTRO_VERSION}/${PKGL}.files
 		sync
-		mkdir -p 0builtin_files_${DISTRO_FILE_PREFIX}-${DISTRO_VERSION}/root/.packages/builtin_files
+		mkdir -p 0builtin_files_${DISTRO_FILE_PREFIX}-${DISTRO_VERSION}/var/packages/builtin_files
 		PREVPATH=''; PREVPATH0=''
 		cat /tmp/0builtin_files_${DISTRO_FILE_PREFIX}-${DISTRO_VERSION}/${PKGL}.files |
 		while read ONELINE
@@ -1317,14 +1317,14 @@ if [ -f /tmp/rootfs-packages.specs ];then
 				[ "`echo "$ONELINE" | cut -c 1`" == "." ] && continue #catch ex: ../packages-qrky/abiword
 				if [ -d "rootfs-complete${ONELINE}" ];then
 					PREVPATH="$ONELINE"
-					echo "$ONELINE" >> 0builtin_files_${DISTRO_FILE_PREFIX}-${DISTRO_VERSION}/root/.packages/builtin_files/${PKGL}
+					echo "$ONELINE" >> 0builtin_files_${DISTRO_FILE_PREFIX}-${DISTRO_VERSION}/var/packages/builtin_files/${PKGL}
 				else
 					NEWPATH="`dirname "$ONELINE"`"
 					[ "$NEWPATH" == "/" ] && continue #ignore top-level files.
 					NEWFILE=${ONELINE##*/} #basename "$ONELINE"
 					if [ -e "rootfs-complete${ONELINE}" ];then #sanity check.
 						if [ "$PREVPATH" == "$NEWPATH" -o "$PREVPATH0" == "$NEWPATH" ];then #sanity check. 121010
-							echo " ${NEWFILE}" >> 0builtin_files_${DISTRO_FILE_PREFIX}-${DISTRO_VERSION}/root/.packages/builtin_files/${PKGL}
+							echo " ${NEWFILE}" >> 0builtin_files_${DISTRO_FILE_PREFIX}-${DISTRO_VERSION}/var/packages/builtin_files/${PKGL}
 						fi
 					fi
 				fi
@@ -1341,8 +1341,8 @@ dir2tgz 0builtin_files_${DISTRO_FILE_PREFIX}-${DISTRO_VERSION}
 tgz2pet 0builtin_files_${DISTRO_FILE_PREFIX}-${DISTRO_VERSION}.tar.gz
 rm -rf /tmp/0builtin_files_${DISTRO_FILE_PREFIX}-${DISTRO_VERSION}
 echo
-echo "installing pkg lists into rootfs-complete/root/.packages/builtin_files..."
-cp -a -f 0builtin_files_${DISTRO_FILE_PREFIX}-${DISTRO_VERSION}/root/.packages/builtin_files rootfs-complete/root/.packages/builtin_files
+echo "installing pkg lists into rootfs-complete/var/packages/builtin_files..."
+cp -a -f 0builtin_files_${DISTRO_FILE_PREFIX}-${DISTRO_VERSION}/var/packages/builtin_files rootfs-complete/var/packages/builtin_files
 echo '...done'
 
 #140615

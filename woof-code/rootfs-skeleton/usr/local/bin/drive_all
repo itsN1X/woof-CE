@@ -2,7 +2,7 @@
 #(c) Copyright 2008 Barry Kauler, puppylinux.com
 #2008 Lesser GPL licence v2 (see /usr/share/doc/legal)
 #/sbin/pup_event_frontend_d creates a desktop icon and copy of this script for each drive, ex:
-# for drive sda: cp -a /usr/local/bin/drive_all /root/.pup_event/drive_sda/AppRun
+# for drive sda: cp -a /usr/local/bin/drive_all ${HOME}/.pup_event/drive_sda/AppRun
 #this script is launched by pup_event_frontend_d when the icon is first created. also,
 #this script is launched when user clicks on deskop icon (former is configurable,
 # see /usr/sbin/eventmanager.
@@ -29,7 +29,7 @@
 #110505 support sudo for non-root user.
 #110720 should not open a layer inside aufs, ex: session saved entire partition, desktop drive icon is /initrd/pup_rw.
 #110721 detect if have clicked on a close-box of mounted partition.
-#120110 running as fido, popup password box changes mouse pointer position, need read before run sudo.
+#120110 running as uzer, popup password box changes mouse pointer position, need read before run sudo.
 #120129 karl godt: fix ZOMBIES, see http://murga-linux.com/puppy/viewtopic.php?t=71767&start=420. see also rc.shutdown, pmount, pup_event_frontend_d.
 #120323 partial replace 'xmessage' with 'pupmessage'.
 #120516 pup_event_frontend_d may call here when a drive plugged in, fix handling of automounting.
@@ -51,6 +51,7 @@ rm -f /tmp/desktop_drives_curpos #120110
 export LANG	# need to restart pmount with correct locale
 
 grep -q -m1 -i 'rox' /usr/local/bin/defaultfilemanager && ROX_FILER=yes
+[ -z "$HOMEUSER" ] && . /bin/gethome inittab export
 
 #w002 extracted as a func...
 unmount_func() {
@@ -116,8 +117,8 @@ PARAM1=""
 [ $1 ] && PARAM1="$1"
 
 #extract drive name from end of the script name...
-#note, when click on desktop icon, /root/.pup_event/drive_<ONEDRVNAME> is executed,
-#however a script may run /root/.pup_event/drive_<ONEDRVNAME>/AppRun ...
+#note, when click on desktop icon, ${HOME}/.pup_event/drive_<ONEDRVNAME> is executed,
+#however a script may run ${HOME}/.pup_event/drive_<ONEDRVNAME>/AppRun ...
 ONEDRVNAME=$(dirname $0|sed -e 's/^.*_//')
 if [ "`echo "${PARAM1}" | grep 'pmount_'`" != "" ];then #v403 chose pmount from drive icon menu.
  DRV_CATEGORY="`echo -n "${PARAM1}" | cut -f 2 -d '_'`"
@@ -137,8 +138,8 @@ case $PARAM1 in
   MNTPT="`mount | grep -m1 -E "$mPATTERN" | tr -s ' ' | cut -f 3 -d ' '`" #140702 shinobar
   if [ "$MNTPT" ];then
    #get coords of desktop icon...
-   drPTN=">/root/.pup_event/drive_${ONEDRVNAME}<"
-   PPENTRY="`grep "$drPTN" /root/Choices/ROX-Filer/PuppyPin`"
+   drPTN=">${HOME}/.pup_event/drive_${ONEDRVNAME}<"
+   PPENTRY="`grep "$drPTN" ${HOME}/Choices/ROX-Filer/PuppyPin`"
    if [ "$PPENTRY" ];then
     xleft="`echo -n "$PPENTRY" | grep -o ' x="[0-9]*"' | cut -f 2 -d '"'`" #'geany
     ytop="`echo -n "$PPENTRY" | grep -o ' y="[0-9]*"' | cut -f 2 -d '"'`" #'geany

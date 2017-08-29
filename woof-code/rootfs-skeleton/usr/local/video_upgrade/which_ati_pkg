@@ -13,7 +13,7 @@ echo -n "" > /tmp/vuw_ati_pkg
 KERNELVER="`uname -r`"
 #110827 ati db entry may have dep |+linux_kernel&eq2.6.32|, so insert 'q'...
 kPATTERN='[kq]'"`echo -n "$KERNELVER" | sed -e 's%\.%\\\.%g'`"
-PETS_ATI="`grep '^ati_fglrx\-' /root/.packages/${PET_DB_FILE} | grep -i "${kPATTERN}" | cut -f 8 -d '|'`"
+PETS_ATI="`grep '^ati_fglrx\-' /var/packages/${PET_DB_FILE} | grep -i "${kPATTERN}" | cut -f 8 -d '|'`"
 
 
 if [ "`echo "$ATICHIPS_10_10" | grep -i "$dPATTERN"`" != "" ];then

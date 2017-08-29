@@ -521,7 +521,7 @@ cp -af /root/.pmountsingle /tmp/root/
 
 #.packages/ .files, copy any files installed to /root...
 echo -n "" > /tmp/allpkgs.files
-for ONEPKG in `ls -1 /root/.packages/*.files 2>/dev/null | tr "\n" " "`
+for ONEPKG in `ls -1 /var/packages/*.files 2>/dev/null | tr "\n" " "`
 do
  grep '^/root/' $ONEPKG | while read -r ONEFILE
  do
@@ -538,24 +538,25 @@ do
 done
 
 #w018...
-#modify /root/.packages/ files, as all installed packages are now part of the new cd...
-cp -a -f /root/.packages /tmp/root/
-touch /root/.packages/user-installed-packages
-# 141008: move *.files to ~/.packages/builtin_files/
-cat /root/.packages/user-installed-packages | while read -r ONEPKG; do
-  ONEFILE="/tmp/root/.packages/`echo "$ONEPKG" | cut -f1 -d '|'`.files"
-  ONENAME="/tmp/root/.packages/builtin_files/`echo "$ONEPKG" | cut -f2 -d '|'`"
+#modify /var/packages/ files, as all installed packages are now part of the new cd...
+cp -a -f /var/packages /tmp/root/
+touch /var/packages/user-installed-packages
+# 141008: move *.files to /var/packages/builtin_files/
+cat /var/packages/user-installed-packages | while read -r ONEPKG; do
+  ONEFILE="/tmp/var/packages/`echo "$ONEPKG" | cut -f1 -d '|'`.files"
+  ONENAME="/tmp/var/packages/builtin_files/`echo "$ONEPKG" | cut -f2 -d '|'`"
   mv -f "$ONEFILE" "$ONENAME"
 done
-cat /root/.packages/user-installed-packages >> /tmp/root/.packages/woof-installed-packages
-sort -u --key=1 --field-separator="|" /tmp/root/.packages/woof-installed-packages > /tmp/woof-installed-packages-tmp #110722
-mv -f /tmp/woof-installed-packages-tmp /tmp/root/.packages/woof-installed-packages
-echo -n "" > /tmp/root/.packages/user-installed-packages #v431
+cat /var/packages/user-installed-packages >> /tmp/var/packages/woof-installed-packages
+sort -u --key=1 --field-separator="|" /tmp/var/packages/woof-installed-packages > /tmp/woof-installed-packages-tmp #110722
+mv -f /tmp/woof-installed-packages-tmp /tmp/var/packages/woof-installed-packages
+echo -n "" > /tmp/var/packages/user-installed-packages #v431
 sync #120607
-rm -f /tmp/root/.packages/*.files #120607
-rm -f /tmp/root/.packages/*.remove #120607
+rm -f /tmp/var/packages/*.files #120607
+rm -f /tmp/var/packages/*.remove #120607
 
 [ -f /tmp/root/.XLOADED ] && rm -f /tmp/root/.XLOADED #130527
+[ -f /var/shared/.XLOADED ] && rm -f /var/shared/.XLOADED
 
 m_19="$(eval_gettext 'This program has created folder /tmp/root, which has everything that is now going to be added as /root in the ${PUPPYSFS} file.')
 $(gettext "This is mostly 'pristine', as obviously you do not want all your cache files, temp files, email files, and other working/temporary files to be burnt onto the CD. However, if you are familiar with the workings of Puppy, you might like to take a look at /tmp/root right now, and possibly add anything that you want from /root (or remove something!)")
@@ -564,7 +565,7 @@ $(gettext '(if you think that this program has missed out something important th
 $(eval_gettext "After examining /tmp/root, click 'Ok' to add /root in \${PUPPYSFS} file...")"
 Xdialog --wrap --left --title "$m_01" --msgbox "$m_19" 0 80
 sync
-[ "`ls /tmp/root/.packages/*.files`" = "" ] && CLEARPKGLOG="yes" || CLEARPKGLOG="no" #120607 in case user copied entire /root to /tmp for boot disk.
+[ "`ls /tmp/var/packages/*.files`" = "" ] && CLEARPKGLOG="yes" || CLEARPKGLOG="no" #120607 in case user copied entire /root to /tmp for boot disk.
 mksquashfs /tmp/root $WKGMNTPT/puppylivecdbuild/$PUPPYSFS -keep-as-directory
 sync
 rm -rf /tmp/root
@@ -579,7 +580,7 @@ cp -af /etc/ld.so.conf /tmp/etc/
 
 #.packages/ .files, copy any files installed to /etc...
 echo -n "" > /tmp/allpkgs.files
-for ONEPKG in `ls -1 /root/.packages/*.files 2>/dev/null | tr "\n" " "`
+for ONEPKG in `ls -1 /var/packages/*.files 2>/dev/null | tr "\n" " "`
 do
  grep '^/etc/' $ONEPKG | while read -r ONEFILE
  do
@@ -678,7 +679,7 @@ cp -a /initrd${PUP_LAYER}/var /tmp/var #pristine var
 
 #.packages/ .files, copy any files installed to /var...
 echo -n "" > /tmp/allpkgs.files
-for ONEPKG in `ls -1 /root/.packages/*.files 2>/dev/null | tr "\n" " "`
+for ONEPKG in `ls -1 /var/packages/*.files 2>/dev/null | tr "\n" " "`
 do
  grep '^/var/' $ONEPKG | while read -r ONEFILE
  do

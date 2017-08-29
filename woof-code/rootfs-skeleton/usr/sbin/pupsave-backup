@@ -182,7 +182,7 @@ Backup file name: ${destfile}"
 		fi
 	fi
 
-	mv /root/.XLOADED /etc/xloadedx
+	mv /var/shared/.XLOADED /var/shared/xloadedx
 	sync
 	sleep 0.5
 	CWDIR=$PWD
@@ -237,7 +237,7 @@ Backup file name: ${destfile}"
 		fi
 	fi
 
-	mv /etc/xloadedx /root/.XLOADED
+	mv /var/shared/xloadedx /var/shared/.XLOADED
 	sync
 	if [ $RETVAL -eq 0 ] ; then
 		/usr/lib/gtkdialog/box_ok "Pupsave Backup" complete "Save${type} Backup Completed:

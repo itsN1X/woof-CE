@@ -7,6 +7,7 @@
 #   /sbin/reboot
 
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin
+[ -z "$HOMEUSER" ] && . /bin/gethome inittab
 
 export TEXTDOMAIN=rc.shutdown
 export OUTPUT_CHARSET=UTF-8
@@ -183,11 +184,11 @@ rm -f /var/log/X*
 #rm -rf /tmp/*
 rm -f /var/lock/LCK*
 rm -f /var/run/*.pid
-rm -rf /root/tmp 2> /dev/null #...note, not screening this out in any of above save modes.
-rm -rf /root/.thumbnails/* 2> /dev/null
+rm -rf $HOME/tmp 2> /dev/null #...note, not screening this out in any of above save modes.
+rm -rf $HOME/.thumbnails/* 2> /dev/null
 [ -d /var/tmp ] && rm -rf /var/tmp/* 2> /dev/null #100820
 rm -f /tmp/geany_socket* 2>/dev/null #if geany still running at shutdown
-[ -d /root/.config/geany ] && rm -f /root/.config/geany/geany_socket* 2>/dev/null
+[ -d $HOME/.config/geany ] && rm -f $HOME/.config/geany/geany_socket* 2>/dev/null
 [ -f /etc/rc.d/MORESFS ] && rm /etc/rc.d/MORESFS
 sync
 
@@ -277,7 +278,7 @@ case $PUPMODE in
   for ONEDIR in $RDIRS
   do
    BASENAME="`basename $ONEDIR`"
-   # set owner/permission of dirs when 1st save. this is important when choose to run as fido on 1st shutdown.
+   # set owner/permission of dirs when 1st save. this is important when choose to run as uzer on 1st shutdown.
    if [ ! -d /tmp/save1stpup/${BASENAME} ];then
     mkdir -p /tmp/save1stpup/${BASENAME}
     #110503 got this from /usr/sbin/snapmergepuppy...

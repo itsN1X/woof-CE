@@ -589,7 +589,7 @@ internal adaptor after installation)")'"</label></text>
 echo ' 
 style "bg" { bg [NORMAL] = "'$SVG_BAR_COLOR_TOTAL'" } 
 widget "*bg*" style "bg"' > /tmp/gtkrc_pui 
-export GTK2_RC_FILES=/tmp/gtkrc_pui:/root/.gtkrc-2.0 
+export GTK2_RC_FILES=/tmp/gtkrc_pui:$HOME/.gtkrc-2.0 
 
 . /usr/lib/gtkdialog/xml_info gtk #build bg_pixmap for gtk-theme 
 RETVAL="`gtkdialog -p PUI 2>/dev/null`" 
@@ -672,7 +672,7 @@ gui_func() {
 	echo ' 
 style "bg" { bg [NORMAL] = "'$SVG_BAR_COLOR_TOTAL'" } 
 widget "*bg*" style "bg"' > /tmp/gtkrc_sel 
-	export GTK2_RC_FILES=/tmp/gtkrc_sel:/root/.gtkrc-2.0 
+	export GTK2_RC_FILES=/tmp/gtkrc_sel:$HOME/.gtkrc-2.0 
 
 	. /usr/lib/gtkdialog/xml_info gtk #build bg_pixmap for gtk-theme
 	RETVAL="`gtkdialog -p dlg1`" 

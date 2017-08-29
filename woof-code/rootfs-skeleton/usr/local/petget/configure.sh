@@ -19,24 +19,24 @@ export OUTPUT_CHARSET=UTF-8
 #export LANG=C
 . /etc/DISTRO_SPECS #has DISTRO_BINARY_COMPAT, DISTRO_COMPAT_VERSION
 . /etc/rc.d/PUPSTATE
-. /root/.packages/DISTRO_PKGS_SPECS
-. /root/.packages/DISTRO_PET_REPOS
-. /root/.packages/PKGS_MANAGEMENT #has PKG_REPOS_ENABLED
+. /var/packages/DISTRO_PKGS_SPECS
+. /var/packages/DISTRO_PET_REPOS
+. /var/packages/PKGS_MANAGEMENT #has PKG_REPOS_ENABLED
 
 #find what repos are currently in use... 120510...
 CHECKBOXES_REPOS=""
-#for ONEREPO in `ls -1 /root/.packages/Packages-*`
+#for ONEREPO in `ls -1 /var/packages/Packages-*`
 #120510 bugfix with ui_Ziggy. add CHECKBOX_MAIN_REPO var to gui
-MAIN_REPO="`ls -1 /root/.packages/Packages-* | grep "puppy\-${DISTRO_DB_SUBNAME}\-" | head -n 1 | sed 's%^/root/.packages/%%'`" #121102 121129
+MAIN_REPO="`ls -1 /var/packages/Packages-* | grep "puppy\-${DISTRO_DB_SUBNAME}\-" | head -n 1 | sed 's%^/var/packages/%%'`" #121102 121129
 #120515 hmmm, in some cases, Packages-puppy-${DISTRO_FILE_PREFIX}-* may not exist (ex, Racy only has Packages-puppy-wary5-official)...
 #121102 ...now using DISTRO_DB_SUBNAME, should always exist.
-[ "$MAIN_REPO" = "" ] && MAIN_REPO="`echo "$PACKAGELISTS_PET_ORDER" | tr ' ' '\n' | head -n 1`" #PACKAGELISTS_PET_ORDER is in /root/.packages/DISTRO_PET_REPOS.
+[ "$MAIN_REPO" = "" ] && MAIN_REPO="`echo "$PACKAGELISTS_PET_ORDER" | tr ' ' '\n' | head -n 1`" #PACKAGELISTS_PET_ORDER is in /var/packages/DISTRO_PET_REPOS.
 [ "$MAIN_REPO" = "" ] && MAIN_REPO="Packages-puppy-noarch-official" #paranoid precaution.
 bMAIN_PATTERN=' '"$MAIN_REPO"' '
 MAIN_DBNAME="`echo -n "$MAIN_REPO" | sed -e 's%Packages\-%%'`"
 CHECKBOX_MAIN_REPO="<checkbox><default>true</default><label>${MAIN_DBNAME}</label><variable>CHECK_${MAIN_DBNAME}</variable><visible>disabled</visible></checkbox>" #hard coded "true"
 
-DBFILESLIST="$(ls -1 /root/.packages/Packages-*)" #121129
+DBFILESLIST="$(ls -1 /var/packages/Packages-*)" #121129
 
 PKG_REPOS_ENABLED=" ${PKG_REPOS_ENABLED} " #121129 precaution.
 for ONEREPO in `echo "$DBFILESLIST" | grep -v "${MAIN_REPO}" | tr '\n' ' '` #120515 fix. 121129
@@ -75,16 +75,16 @@ fi
 
 # pet download folder
 SAVEPATH=""
-if [ -f /root/.packages/download_path ]; then
- . /root/.packages/download_path
+if [ -f /var/packages/download_path ]; then
+ . /var/packages/download_path
  if [ -d "$DL_PATH" ];then
   DL_PATH="$DL_PATH"
  else
-  DL_PATH=/root
-  rm -f /root/.packages/download_path
+  DL_PATH=$HOME
+  rm -f /var/packages/download_path
  fi
 else
- DL_PATH=/root
+ DL_PATH=$HOME
 fi
 
 DBmethod="$(cat /var/local/petget/db_verbose)"
@@ -164,7 +164,7 @@ S='<window title="'$(gettext 'Puppy Package Manager - Configure')'" icon-name="g
                 '"`/usr/lib/gtkdialog/xml_pixmap info.svg`"'
               </vbox>
             </hbox>
-            <text xalign="0" space-expand="true" space-fill="true"><label>'$(gettext 'Technical note: if you would like to see the package databases, they are at')' /root/.packages/Packages-*. '$(gettext 'These are in a standardised format, regardless of which distribution they were obtained from. This format is considerably smaller than that of the original distro.')'</label></text>
+            <text xalign="0" space-expand="true" space-fill="true"><label>'$(gettext 'Technical note: if you would like to see the package databases, they are at')' /var/packages/Packages-*. '$(gettext 'These are in a standardised format, regardless of which distribution they were obtained from. This format is considerably smaller than that of the original distro.')'</label></text>
           </hbox>
         </vbox>
         <label>'$(gettext 'More info')'</label>
@@ -231,7 +231,7 @@ S='<window title="'$(gettext 'Puppy Package Manager - Configure')'" icon-name="g
       </checkbox>
       <hbox>
         <text width-request="100"><label>'$(gettext "Save PKGs in:")'</label></text>
-        <entry accept="folder" width-request="200" tooltip-text="'$(gettext "To change, type a path to a folder or use the button to select a folder. Delete the present path to default back to /root")'"><default>'${DL_PATH}'</default><variable>SAVEPATH</variable></entry>
+        <entry accept="folder" width-request="200" tooltip-text="'$(gettext "To change, type a path to a folder or use the button to select a folder. Delete the present path to default back to $HOME")'"><default>'${DL_PATH}'</default><variable>SAVEPATH</variable></entry>
         <button>
          <input file stock="gtk-open"></input>
          <action type="fileselect">SAVEPATH</action>
@@ -263,7 +263,7 @@ S='<window title="'$(gettext 'Puppy Package Manager - Configure')'" icon-name="g
 </window>'
 export PPM_CONFIG="$S"
 
-#echo "$PPM_CONFIG" > /root/gtk
+#echo "$PPM_CONFIG" > $HOME/gtk
 
 RETPARAMS="`gtkdialog -p PPM_CONFIG`"
 #ex:
@@ -293,15 +293,15 @@ fi
 # handle savepath
 SAVEPATH="`echo -n "$RETPARAMS" | grep 'SAVEPATH' | cut -f 2 -d '"'`"
 if [ "$SAVEPATH" = "" ];then
-	rm -f /root/.packages/download_path
+	rm -f /var/packages/download_path
 else
 	if [ ! -d "$SAVEPATH" ]; then
 		mkdir -p "$SAVEPATH"
-		[ $? -eq 0 ] && echo DL_PATH=\'$SAVEPATH\' > /root/.packages/download_path
+		[ $? -eq 0 ] && echo DL_PATH=\'$SAVEPATH\' > /var/packages/download_path
 	elif [ -w "$SAVEPATH" ]; then
-		echo DL_PATH=\'$SAVEPATH\' > /root/.packages/download_path
+		echo DL_PATH=\'$SAVEPATH\' > /var/packages/download_path
 	else
-		rm -f /root/.packages/download_path
+		rm -f /var/packages/download_path
 	fi
 fi
 
@@ -318,9 +318,9 @@ do
 #  [ $repocnt -gt 5 ] && break #only allow 5 active repos in PPM.
  fi
 done
-grep -v '^PKG_REPOS_ENABLED' /root/.packages/PKGS_MANAGEMENT > /tmp/pkgs_management_tmp2
-mv -f /tmp/pkgs_management_tmp2 /root/.packages/PKGS_MANAGEMENT
-echo "PKG_REPOS_ENABLED='${enabledrepos}'" >> /root/.packages/PKGS_MANAGEMENT
+grep -v '^PKG_REPOS_ENABLED' /var/packages/PKGS_MANAGEMENT > /tmp/pkgs_management_tmp2
+mv -f /tmp/pkgs_management_tmp2 /var/packages/PKGS_MANAGEMENT
+echo "PKG_REPOS_ENABLED='${enabledrepos}'" >> /var/packages/PKGS_MANAGEMENT
 
 for I in `grep -E "PPM_GUI|pkg_chooser|/usr/local/bin/ppm" <<< "$(ps -eo pid,command)" | awk '{print $1}' `; do kill -9 $I; done
 sleep 0.5

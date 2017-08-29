@@ -4,7 +4,7 @@
 #  previewed prior to installation. ex: abiword-1.2.3
 #/tmp/petget/current-repo-triad has the repository that installing from (written in pkgchooser.sh).
 #  ex: slackware-12.2-slacky
-#  ...full package database file is /root/.packages/Packages-slackware-12.2-slacky
+#  ...full package database file is /var/packages/Packages-slackware-12.2-slacky
 #/tmp/petget_missingpkgs_patterns (written in findmissingpkgs.sh) has a list of missing dependencies, format ex:
 #  |kdebase|
 #  |kdelibs|
@@ -39,10 +39,10 @@
 export TEXTDOMAIN=petget___dependencies.sh
 export OUTPUT_CHARSET=UTF-8
 
-. /root/.packages/PKGS_MANAGEMENT #has PKG_ALIASES_INSTALLED
-. /root/.packages/DISTRO_PET_REPOS
+. /var/packages/PKGS_MANAGEMENT #has PKG_ALIASES_INSTALLED
+. /var/packages/DISTRO_PET_REPOS
 . /etc/DISTRO_SPECS
-PREPATH='/root/.packages/'
+PREPATH='/var/packages/'
 
 #a problem is that the dependencies may have their own dependencies. Some pkg
 #databases have all dependencies up-front, whereas some only list the higher-level

@@ -65,8 +65,8 @@ if [ "$(pwd)" = "/" ];then
   chmod a-x etc/init.d/frisbee #150301
   (
    sleep 3
-   [ "$(ls root/.packages/frisbee-1.*.files 2>/dev/null)" ] \
-    && sed -i 's%/etc/init.d/frisbee.sh%/etc/init.d/frisbee\n&%' root/.packages/frisbee-1.*.files
+   [ "$(ls /var/packages/frisbee-1.*.files 2>/dev/null)" ] \
+    && sed -i 's%/etc/init.d/frisbee.sh%/etc/init.d/frisbee\n&%' /var/packages/frisbee-1.*.files
   ) &
  fi
 
@@ -101,15 +101,15 @@ if [ "$(pwd)" = "/" ];then
   ln -snf frisbee usr/local/bin/frisbee_mode_disable
   ln -snf ../bin/frisbee usr/local/frisbee/connect
   ln -snf ../bin/frisbee usr/local/frisbee/disconnect
-  [ "$(ls root/.packages/frisbee-1.*.files 2>/dev/null)" ] \
+  [ "$(ls /var/packages/frisbee-1.*.files 2>/dev/null)" ] \
    && sed -i -e 's%/usr/local/bin/frisbee$%&\n/usr/local/bin/frisbee_mode_disable%' \
    -e 's%/usr/local/frisbee/frisbee-gprs-connect$%/usr/local/frisbee/connect\n/usr/local/frisbee/disconnect\n&%' \
-   root/.packages/frisbee-1.*.files
+   /var/packages/frisbee-1.*.files
  elif grep -q 'frisbee_cli --' usr/local/apps/Connect/AppRun;then
   ln -snf frisbee usr/local/bin/frisbee_cli
-  [ "$(ls root/.packages/frisbee-1.*.files 2>/dev/null)" ] \
+  [ "$(ls /var/packages/frisbee-1.*.files 2>/dev/null)" ] \
    && sed -i -e 's%/usr/local/bin/frisbee$%&\n/usr/local/bin/frisbee_cli%' \
-   root/.packages/frisbee-1.*.files
+   /var/packages/frisbee-1.*.files
  fi
 
  #Remove old gprs.conf, to generate new one.

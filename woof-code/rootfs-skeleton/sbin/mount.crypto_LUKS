@@ -13,7 +13,7 @@ if [ "$ERRMSG" ] ; then
 	exit 1
 fi
 
-[ -f /root/.gtkrc-2.0 ] && export GTK2_RC_FILES=/root/.gtkrc-2.0
+[ -f $HOME/.gtkrc-2.0 ] && export GTK2_RC_FILES=$HOME/.gtkrc-2.0
 
 #=============================================================
 #                      filemnt
@@ -77,8 +77,8 @@ if [ $RETVAL -eq 0 -a "$(pidof ROX-Filer)" != "" ];then
   #special case, SD card /dev/mmcblk0p1...
   [ "$DRVNAME" = "mmc" ] && DRVNAME="`echo -n "$DEVNAME" | sed -e 's/p[0-9]$//'`"
   xDRVNAME="$DRVNAME" #v404
-  [ -d /root/.pup_event/drive_${DEVNAME} ] && DRVNAME="$DEVNAME" #icon for each partition.
-  if [ -d /root/.pup_event/drive_${DRVNAME} ];then
+  [ -d $HOME/.pup_event/drive_${DEVNAME} ] && DRVNAME="$DEVNAME" #icon for each partition.
+  if [ -d $HOME/.pup_event/drive_${DRVNAME} ];then
     DRV_CATEGORY="`probedisk "/dev/${xDRVNAME} " | cut -f 2 -d '|'`"
     icon_mounted_func $DRVNAME $DRV_CATEGORY crypto_LUKS #see frontend_funcs
   fi
